@@ -48,5 +48,5 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # lock a Ruby version
-ruby "ruby 2.2.2p95"
-
+# rubygem 2.5.1 corresponds to ruby version 2.3.1 (madness)
+ruby "2.5.1"
