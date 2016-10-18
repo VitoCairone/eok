@@ -1,0 +1,16 @@
+<% @thoughts.each do |thought| %>
+  <p>
+    <%= thought.text %>
+  </p>
+<% end %>
+
+<%= form_for :thought, url: thoughts_path do |f| %>
+  <p>
+    <%= f.label :text %><br>
+    <%= f.text_area :text %>
+  </p>
+ 
+  <p>
+    <%= f.submit %>
+  </p>
+<% end %>
