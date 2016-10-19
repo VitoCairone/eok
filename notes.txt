@@ -1,0 +1,5 @@
+rails g scaffold question text:text user_auth:references anonymous:boolean cents:integer randomize:boolean
+
+rails g scaffold choice text:text question:references ordinality:integer voice_count:integer is_pass:boolean
+
+rails g scaffold voice user_auth:references question:references choice:references

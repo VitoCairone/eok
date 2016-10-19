@@ -10,10 +10,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161019000205) do
+ActiveRecord::Schema.define(version: 20161019024227) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "choices", force: :cascade do |t|
+    t.text     "text"
+    t.integer  "question_id"
+    t.integer  "ordinality"
+    t.integer  "voice_count"
+    t.boolean  "is_pass"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["question_id"], name: "index_choices_on_question_id", using: :btree
+  end
+
+  create_table "questions", force: :cascade do |t|
+    t.text     "text"
+    t.integer  "user_auth_id"
+    t.boolean  "anonymous"
+    t.integer  "cents"
+    t.boolean  "randomize"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["user_auth_id"], name: "index_questions_on_user_auth_id", using: :btree
+  end
 
   create_table "thoughts", force: :cascade do |t|
     t.text     "text"
@@ -37,5 +59,21 @@ ActiveRecord::Schema.define(version: 20161019000205) do
     t.index ["uid"], name: "index_user_auths_on_uid", using: :btree
   end
 
+  create_table "voices", force: :cascade do |t|
+    t.integer  "user_auth_id"
+    t.integer  "question_id"
+    t.integer  "choice_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["choice_id"], name: "index_voices_on_choice_id", using: :btree
+    t.index ["question_id"], name: "index_voices_on_question_id", using: :btree
+    t.index ["user_auth_id"], name: "index_voices_on_user_auth_id", using: :btree
+  end
+
+  add_foreign_key "choices", "questions"
+  add_foreign_key "questions", "user_auths"
   add_foreign_key "thoughts", "user_auths"
+  add_foreign_key "voices", "choices"
+  add_foreign_key "voices", "questions"
+  add_foreign_key "voices", "user_auths"
 end

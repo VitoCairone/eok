@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Voices</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>User auth</th>
+      <th>Question</th>
+      <th>Choice</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @voices.each do |voice| %>
+      <tr>
+        <td><%= voice.user_auth %></td>
+        <td><%= voice.question %></td>
+        <td><%= voice.choice %></td>
+        <td><%= link_to 'Show', voice %></td>
+        <td><%= link_to 'Edit', edit_voice_path(voice) %></td>
+        <td><%= link_to 'Destroy', voice, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Voice', new_voice_path %>

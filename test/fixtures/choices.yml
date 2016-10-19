@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  text: MyText
+  question: one
+  ordinality: 1
+  voice_count: 1
+  is_pass: false
+
+two:
+  text: MyText
+  question: two
+  ordinality: 1
+  voice_count: 1
+  is_pass: false

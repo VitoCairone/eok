@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Text:</strong>
+  <%= @question.text %>
+</p>
+
+<p>
+  <strong>Author:</strong>
+  <%= @question.user_auth.name %>
+</p>
+
+<p>
+  <strong>Anonymous:</strong>
+  <%= @question.anonymous %>
+</p>
+
+<p>
+  <strong>Cents:</strong>
+  <%= @question.cents %>
+</p>
+
+<p>
+  <strong>Randomize:</strong>
+  <%= @question.randomize %>
+</p>
+
+<%= link_to 'Edit', edit_question_path(@question) %> |
+<%= link_to 'Back', questions_path %>

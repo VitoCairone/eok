@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>User auth:</strong>
+  <%= @voice.user_auth %>
+</p>
+
+<p>
+  <strong>Question:</strong>
+  <%= @voice.question %>
+</p>
+
+<p>
+  <strong>Choice:</strong>
+  <%= @voice.choice %>
+</p>
+
+<%= link_to 'Edit', edit_voice_path(@voice) %> |
+<%= link_to 'Back', voices_path %>
