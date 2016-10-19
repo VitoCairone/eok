@@ -50,3 +50,5 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 # lock a Ruby version
 # rubygem 2.5.1 corresponds to ruby version 2.3.1 ?? (madness)
 ruby "2.3.1"
+
+gem 'omniauth-facebook'

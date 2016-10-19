@@ -10,15 +10,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161018212515) do
+ActiveRecord::Schema.define(version: 20161019000205) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "thoughts", force: :cascade do |t|
     t.text     "text"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.integer  "user_auth_id"
+    t.index ["user_auth_id"], name: "index_thoughts_on_user_auth_id", using: :btree
   end
 
+  create_table "user_auths", force: :cascade do |t|
+    t.string   "provider",   null: false
+    t.string   "uid",        null: false
+    t.string   "name"
+    t.string   "location"
+    t.string   "image_url"
+    t.string   "url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["provider", "uid"], name: "index_user_auths_on_provider_and_uid", unique: true, using: :btree
+    t.index ["provider"], name: "index_user_auths_on_provider", using: :btree
+    t.index ["uid"], name: "index_user_auths_on_uid", using: :btree
+  end
+
+  add_foreign_key "thoughts", "user_auths"
 end

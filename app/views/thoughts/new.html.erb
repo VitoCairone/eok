@@ -1,6 +1,22 @@
+<% if current_user_auth %>
+  <p>
+    You are <%= current_user_auth.name %>.
+  </p>
+  <p>
+    You can <%= link_to 'logout', logout_path, method: :delete %>.
+  </p>
+<% else %>
+  <h1>
+    You are not logged in.
+  </h1>
+  <p>
+    Proceed to <%= link_to 'login', '/auth/facebook' %>.
+  </p>
+<% end %>
+
 <% @thoughts.each do |thought| %>
   <p>
-    <%= thought.text %>
+    <%= thought.text %> -- <%= thought.user_auth.name %>
   </p>
 <% end %>
 
