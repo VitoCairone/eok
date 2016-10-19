@@ -15,7 +15,11 @@ class QuestionsController < ApplicationController
 
   # GET /questions/new
   def new
+    # Create a new blank question so we can reuse
+    # view logic for 'new' and 'edit'. This doesn't
+    # hit the database until 'create'.
     @question = Question.new
+    7.times { @question.choices.build }
   end
 
   # GET /questions/1/edit
@@ -25,7 +29,25 @@ class QuestionsController < ApplicationController
   # POST /questions
   # POST /questions.json
   def create
-    @question = Question.new(question_params)
+    these_params = question_params
+    choices_attribs = these_params['choices_attributes']
+
+    # drop all blank choices
+    choices_attribs.keep_if { |k, v| !v['text'].blank? }
+
+    # assign ordinality, ensuring a consecutively numbered
+    # set of non-blank choices are always sent to the database.
+    idx = 1;
+    choices_attribs.each do |k, v|
+      v['ordinality'] = idx;
+      idx += 1;
+    end
+
+    # this is where :acceps_nested_attributes_for
+    # creates all the associated choices also
+    @question = Question.new(these_params)
+    @question.user_auth = current_user_auth
+    @question.cents = 5
 
     respond_to do |format|
       if @question.save
@@ -70,9 +92,13 @@ class QuestionsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def question_params
-      safe_params = params.require(:question).permit(:text, :anonymous, :randomize)
-      safe_params['cents'] = 5; # TODO: move to a config somewhere
-      safe_params['user_auth_id'] = current_user_auth.id || nil
+      puts "!!!!!"
+      safe_params = params.require(:question).permit(:text, :anonymous, :randomize, choices_attributes: [:id, :text])
+      # safe_params['cents'] = 5; # TODO: move to a config somewhere
+      # safe_params['user_auth_id'] = current_user_auth.id || nil
+      # puts "@@@"
+      # puts safe_params.inspect
+      # puts "~~~~~~"
       safe_params
     end
 end

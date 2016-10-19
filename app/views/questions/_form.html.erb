@@ -26,6 +26,13 @@
     <%= f.check_box :randomize %>
   </div>
 
+  <%= f.fields_for :choices do |choice_f| %>
+    <div class="field">
+      <%= choice_f.label :text %>
+      <%= choice_f.text_area :text %>
+    </div>
+  <% end %>
+
   <div class="actions">
     <%= f.submit %>
   </div>
