@@ -1,0 +1,37 @@
+Monetization notes
+
+  [UI note]
+  - a 'page' is a set of 5;
+    a passed question is NOT immediately slotted-out,
+    instead marked pass and remains; after next-page, 
+    can be found in passed. Thus, answers remain
+    visible on page, after asking, and are not pushed
+    out until next-page action. This changes the conceptual
+    user workflow from an infinite churning queue to a
+    nicely chunked set, giving it a better mental volume
+
+  - award 250 c (25 pages) at signup
+  - award 120 c (12 pages) daily at 7 pm
+    (MVP: server time, later: user time)
+  - donate 2 c per choice
+  - passes are free
+  - award 10 c for 5 everyone-knows in a row
+    in a row, rather than across pages, allows
+    users to develop strategies, making the exercise
+    more fun and also giving an implied incentive by merit
+    of reduced strategic cost to answer counter-everyone
+    right after earning a dime
+  - Award author 100 c when their question
+    reaches 1000 c, and again at 2,000, at 3,000, and so on
+  - Donate c to any question freely at any time
+    UI for this should be directly on questions,
+    equally visible as basic actions
+
+  - purchase 100c/$ for $1-2,
+             120c/$ for $3-4,
+             140c/$ for $5+
+  - optional silver nametag for lifetime spending $5+
+  - optional gold nametag for lifetime spending $25+
+
+  - Question create cost 5 c
+  - Label bottom 2 answer slots in create +1c
