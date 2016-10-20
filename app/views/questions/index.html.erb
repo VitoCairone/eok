@@ -23,6 +23,8 @@ $(window).load(function(){
 
 <body>
 
+<!-- use this code for chevrons that change with collapse state -->
+<!--
 <style type="text/css">
   .panel-heading a:after {
   font-family:'Glyphicons Halflings';
@@ -34,6 +36,7 @@ $(window).load(function(){
     content:"\e080";
   }
 </style>
+-->
 
 <h1>Questions</h1>
 
@@ -57,13 +60,11 @@ $(window).load(function(){
         </h4>
       </div>
       <div id="collapse<%= num_word %>" class="panel-collapse collapse">
-        <div class="panel-body">
-          <% question.choices.each do |choice| %>
-            <p>
-              <%= choice.text %>
-            </p>
-          <% end %>
-        </div>
+        <% question.choices.each do |choice| %>
+          <div class="panel-body">
+            <%= choice.text %>
+          </div>
+        <% end %>
       </div>
     </div>
     <% num += 1 %>
