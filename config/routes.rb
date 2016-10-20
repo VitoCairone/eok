@@ -1,10 +1,13 @@
 Rails.application.routes.draw do
-  resources :voices
-  resources :choices
-  resources :questions
   root 'welcome#index'
 
   resources :thoughts
+
+  resources :questions
+
+  resources :choices, only: [:index, :show]
+
+  resources :voices
 
   get '/auth/:provider/callback', to: 'sessions#create'
 

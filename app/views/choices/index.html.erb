@@ -8,13 +8,17 @@
       <th>Text</th>
       <th>Question</th>
       <th>Ordinality</th>
-      <th>Voice count</th>
-      <th>Is pass</th>
-      <th colspan="3"></th>
+      <th>Voices</th>
+      <th>Pass</th>
+      <th></th>
     </tr>
   </thead>
 
   <tbody>
+    <!-- notice in this table how, because each choice is issuing
+    an independant query returning a record for its question and then
+    instantiating that record object, these record objects are NOT
+    matching references even when the question is the same -->
     <% @choices.each do |choice| %>
       <tr>
         <td><%= choice.text %></td>
@@ -23,8 +27,6 @@
         <td><%= choice.voice_count %></td>
         <td><%= choice.is_pass %></td>
         <td><%= link_to 'Show', choice %></td>
-        <td><%= link_to 'Edit', edit_choice_path(choice) %></td>
-        <td><%= link_to 'Destroy', choice, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
@@ -32,4 +34,3 @@
 
 <br>
 
-<%= link_to 'New Choice', new_choice_path %>

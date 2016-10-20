@@ -1,35 +1,79 @@
 <p id="notice"><%= notice %></p>
 
+<head>
+
+<!-- TODO: this doesn't belong here, move to layout or gem install -->
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.0.2.js"></script>
+
+<link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+
+<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css">
+
+<script type='text/javascript'>//<![CDATA[
+$(window).load(function(){
+
+});//]]> 
+
+</script>
+  
+</head>
+
+<body>
+
+<style type="text/css">
+  .panel-heading a:after {
+  font-family:'Glyphicons Halflings';
+  content:"\e114";
+  float: right;
+  color: grey;
+  }
+  .panel-heading a.collapsed:after {
+    content:"\e080";
+  }
+</style>
+
 <h1>Questions</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Text</th>
-      <th>Author</th>
-      <th>Anon</th>
-      <th>Cents</th>
-      <th>Rand</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
+<!-- move this constant somewhere else -->
+<% num_words = ["Zero", "One", "Two", "Three",
+   "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"]
+%>
 
-  <tbody>
-    <% @questions.each do |question| %>
-      <tr>
-        <td><%= question.text %></td>
-        <td><%= question.user_auth.name %></td>
-        <td><%= question.anonymous %></td>
-        <td><%= question.cents %></td>
-        <td><%= question.randomize %></td>
-        <td><%= link_to 'Show', question %></td>
-        <td><%= link_to 'Edit', edit_question_path(question) %></td>
-        <td><%= link_to 'Destroy', question, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<% num = 1 %>
+<div class="panel-group" id="accordion">
+  <% @questions.each do |question| %>
+    <% num_word = num_words[num] %>
+    <div class="panel panel-default" id="panel<%= num %>">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-target="#collapse<%= num_word %>" 
+           data-remote="true" data-parent="#accordion"
+           href="#collapse<%= num_word %>" class="collapsed">
+            <%= question.text %>
+          </a>
+        </h4>
+      </div>
+      <div id="collapse<%= num_word %>" class="panel-collapse collapse">
+        <div class="panel-body">
+          <% question.choices.each do |choice| %>
+            <p>
+              <%= choice.text %>
+            </p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <% num += 1 %>
+  <% end %>
+</div>
 
 <br>
 
 <%= link_to 'New Question', new_question_path %>
+
+<!-- cut these, should be in layout -->
+</body>
+</html>
