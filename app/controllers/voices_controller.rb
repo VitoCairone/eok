@@ -12,23 +12,36 @@ class VoicesController < ApplicationController
   def show
   end
 
-  # GET /voices/new
-  def new
-    @voice = Voice.new
-  end
-
-  # GET /voices/1/edit
-  def edit
-  end
-
   # POST /voices
   # POST /voices.json
   def create
-    @voice = Voice.new(voice_params)
+    these_params = voice_params
+
+    choice = Choice.find(these_params['choice_id'])
+    return if choice.nil?
+    question_id = choice.question_id
+    # puts "@@@@[A] " + question_id.to_s
+
+    return if current_user_auth.nil?
+    user_auth_id = current_user_auth.id
+    # puts "@@@@[B]" + user_auth_id.to_s
+
+    # Before creating a voice, delete any existing voice(s) the user
+    # might have for this question.
+    Voice.delete_all(question_id: question_id, user_auth_id: user_auth_id)
+    
+    these_params = voice_params;
+    these_params['question_id'] = question_id
+    these_params['user_auth_id'] = user_auth_id
+    @voice = Voice.new(these_params)
 
     respond_to do |format|
       if @voice.save
-        format.html { redirect_to @voice, notice: 'Voice was successfully created.' }
+        # TODO: redirecting to questions index is a bad hack;
+        # this causes us to lose our current expanded question and go back
+        # to a collapsed carousel. Need to try to handle voice creation
+        # entirely by AJAX without a page load.
+        format.html { redirect_to :questions, notice: 'Voice was successfully created.' }
         format.json { render :show, status: :created, location: @voice }
       else
         format.html { render :new }
@@ -69,6 +82,6 @@ class VoicesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def voice_params
-      params.require(:voice).permit(:user_auth_id, :question_id, :choice_id)
+      params.require(:voice).permit(:choice_id)
     end
 end

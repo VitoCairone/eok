@@ -7,7 +7,7 @@ Rails.application.routes.draw do
 
   resources :choices, only: [:index, :show]
 
-  resources :voices
+  resources :voices, except: [:new, :edit, :update]
 
   get '/auth/:provider/callback', to: 'sessions#create'
 

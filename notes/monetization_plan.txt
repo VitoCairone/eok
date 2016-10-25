@@ -10,7 +10,7 @@ Monetization notes
     user workflow from an infinite churning queue to a
     nicely chunked set, giving it a better mental volume
 
-  - award 250 c (25 pages) at signup
+  - award 300 c (30 pages) at signup
   - award 120 c (12 pages) daily at 7 pm
     (MVP: server time, later: user time)
   - donate 2 c per choice
@@ -33,5 +33,29 @@ Monetization notes
   - optional silver nametag for lifetime spending $5+
   - optional gold nametag for lifetime spending $25+
 
-  - Question create cost 5 c
+  - Question create cost 5c up to 10/day,
+    doubling for each next 10 to a max of 80,
+    re-setting daily at 7 pm.
+  - Pushdowns/Thieveries/???
+    cost 350c to take 100 cents from a question
+    for yourself
   - Label bottom 2 answer slots in create +1c
+
+
+IFAQ
+
+Can I exchange my everyone-knows cents for real money?
+
+NO!
+
+We award 120 c/day to each user,
+which is 3600 c/month.
+
+There is no way we could support changing cents to
+real money unless the government gave us permission
+to print money, which we would like them to, but
+don't think is very likely.
+
+Your real-money donations can be refunded within
+one week, provided you have sufficient cents
+still on hand.

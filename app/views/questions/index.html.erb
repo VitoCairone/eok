@@ -5,35 +5,24 @@
 <p id="notice"><%= notice %></p>
 
 <head>
-
-<!-- Shouldn't be necessary for default behavior, just chevron -->
-<!-- <link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css"> -->
-
-<script type='text/javascript'>//<![CDATA[
-$(window).load(function(){
-
-});//]]> 
-
-</script>
   
 </head>
 
 <body>
 
-<!-- use this code for chevrons that change with collapse state -->
-<!--
-<style type="text/css">
-  .panel-heading a:after {
-  font-family:'Glyphicons Halflings';
-  content:"\e114";
-  float: right;
-  color: grey;
-  }
-  .panel-heading a.collapsed:after {
-    content:"\e080";
-  }
-</style>
--->
+<!-- <script type="text/javascript">
+
+// $("input").change(function(){
+//   alert("The text has been changed.");
+// });
+
+$(".list-group > a").on('click', function() {
+
+    alert("You selected " + $(this).data('value'));
+
+});
+
+</script> -->
 
 <h1>Questions</h1>
 
@@ -43,25 +32,46 @@ $(window).load(function(){
 %>
 
 <% num = 1 %>
+<% my_choice_ids = @my_voices.map { |voice| voice.choice_id } %>
 <div class="panel-group" id="accordion">
   <% @questions.each do |question| %>
+
     <% num_word = num_words[num] %>
+
     <div class="panel panel-default" id="panel<%= num %>">
-      <div class="panel-heading">
+      <div class="panel-heading"
+       onclick="location.href='#';" style="cursor: pointer;"
+       data-toggle="collapse" data-target="#collapse<%= num_word %>" 
+       data-remote="true" data-parent="#accordion">
         <h4 class="panel-title">
-          <a data-toggle="collapse" data-target="#collapse<%= num_word %>" 
-           data-remote="true" data-parent="#accordion"
-           href="#collapse<%= num_word %>" class="collapsed">
-            <%= question.text %>
-          </a>
+          <%= question.text %>
         </h4>
       </div>
       <div id="collapse<%= num_word %>" class="panel-collapse collapse">
-        <% question.choices.each do |choice| %>
-          <div class="panel-body">
-            <%= choice.text %>
-          </div>
-        <% end %>
+        <!-- <ul class="list-group"> -->
+          <% question.choices.each do |choice| %>
+            <!-- <li class="panel-body list-group-item"
+             onclick="console.log(<%= choice.id %>);"
+             style="cursor: pointer;" data-remote="true">
+              <%= choice.text %>
+            </li> -->
+
+            <!-- voicing code here -->
+
+            <% my_choice_class = 'open-choice' %>
+            <% my_choice_class = 'my-choice' if my_choice_ids.include? choice.id %>
+            <form action="/voices" class="panel-body list-group-item" method="post">
+              <div class="<%= my_choice_class %>">
+                <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+                <%= hidden_field_tag "voice[choice_id]", choice.id %>
+                <input type="submit" value="<%= choice.text %>" />
+              </div>
+            </form>
+
+            <!-- end voicing code -->
+
+          <% end %>
+        <!-- </ul> -->
       </div>
     </div>
     <% num += 1 %>

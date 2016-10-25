@@ -5,7 +5,8 @@ class QuestionsController < ApplicationController
   # GET /questions.json
   def index
     # @ questions = Questions.get_unseen_for(current_user_auth, 5)
-    @questions = Question.all.order(cents: :desc).limit(5)
+    @questions = Question.includes(:choices).order(cents: :desc).limit(5)
+    @my_voices = Voice.where(user_auth_id: current_user_auth.id)
   end
 
   # GET /questions/1
