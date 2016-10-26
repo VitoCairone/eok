@@ -1,87 +1,11 @@
-<!-- this element is neither in the head nor body;
-     but more importantly, 
-     this file shouldn't really have a head and body section,
-     since it will all be injected into the layout template -->
 <p id="notice"><%= notice %></p>
-
-<head>
-  
-</head>
-
-<body>
-
-<!-- <script type="text/javascript">
-
-// $("input").change(function(){
-//   alert("The text has been changed.");
-// });
-
-$(".list-group > a").on('click', function() {
-
-    alert("You selected " + $(this).data('value'));
-
-});
-
-</script> -->
 
 <h1>Questions</h1>
 
-<!-- move this constant somewhere else -->
-<% num_words = ["Zero", "One", "Two", "Three",
-   "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"]
-%>
-
-<% num = 1 %>
-<% my_choice_ids = @my_voices.map { |voice| voice.choice_id } %>
-<div class="panel-group" id="accordion">
-  <% @questions.each do |question| %>
-
-    <% num_word = num_words[num] %>
-
-    <div class="panel panel-default" id="panel<%= num %>">
-      <div class="panel-heading"
-       onclick="location.href='#';" style="cursor: pointer;"
-       data-toggle="collapse" data-target="#collapse<%= num_word %>" 
-       data-remote="true" data-parent="#accordion">
-        <h4 class="panel-title">
-          <%= question.text %>
-        </h4>
-      </div>
-      <div id="collapse<%= num_word %>" class="panel-collapse collapse">
-        <!-- <ul class="list-group"> -->
-          <% question.choices.each do |choice| %>
-            <!-- <li class="panel-body list-group-item"
-             onclick="console.log(<%= choice.id %>);"
-             style="cursor: pointer;" data-remote="true">
-              <%= choice.text %>
-            </li> -->
-
-            <!-- voicing code here -->
-
-            <% my_choice_class = 'open-choice' %>
-            <% my_choice_class = 'my-choice' if my_choice_ids.include? choice.id %>
-            <form action="/voices" class="panel-body list-group-item" method="post">
-              <div class="<%= my_choice_class %>">
-                <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-                <%= hidden_field_tag "voice[choice_id]", choice.id %>
-                <input type="submit" value="<%= choice.text %>" />
-              </div>
-            </form>
-
-            <!-- end voicing code -->
-
-          <% end %>
-        <!-- </ul> -->
-      </div>
-    </div>
-    <% num += 1 %>
-  <% end %>
+<div id="questions-top">
+  <%= render 'questions/all_questions' %>
 </div>
 
 <br>
 
 <%= link_to 'New Question', new_question_path %>
-
-<!-- cut these, should be in layout -->
-</body>
-</html>

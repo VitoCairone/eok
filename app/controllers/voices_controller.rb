@@ -28,26 +28,21 @@ class VoicesController < ApplicationController
 
     # Before creating a voice, delete any existing voice(s) the user
     # might have for this question.
-    Voice.delete_all(question_id: question_id, user_auth_id: user_auth_id)
+    Voice.where(question_id: question_id, user_auth_id: user_auth_id).delete_all
     
     these_params = voice_params;
     these_params['question_id'] = question_id
     these_params['user_auth_id'] = user_auth_id
     @voice = Voice.new(these_params)
 
-    respond_to do |format|
-      if @voice.save
-        # TODO: redirecting to questions index is a bad hack;
-        # this causes us to lose our current expanded question and go back
-        # to a collapsed carousel. Need to try to handle voice creation
-        # entirely by AJAX without a page load.
-        format.html { redirect_to :questions, notice: 'Voice was successfully created.' }
-        format.json { render :show, status: :created, location: @voice }
-      else
-        format.html { render :new }
-        format.json { render json: @voice.errors, status: :unprocessable_entity }
-      end
-    end
+    @voice.save # need to handle errors here better
+
+    # these instance variables are needed for the JavaScript
+    # which will replace the choices list clientside
+    @panel_num_word = params['panel_num_word']
+    @question = Question.find(question_id)
+    @num_word = @panel_num_word
+    @my_choice_ids = [choice.id]
   end
 
   # PATCH/PUT /voices/1

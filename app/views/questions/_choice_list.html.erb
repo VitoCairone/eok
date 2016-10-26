@@ -1,0 +1,15 @@
+<% question.choices.each do |choice| %>
+
+  <% my_choice_class = 'open-choice' %>
+  <% my_choice_class = 'my-choice' if my_choice_ids.include? choice.id %>
+  
+  <form action="/voices" class="panel-body list-group-item" method="post" data-remote="true">
+    <div class="<%= my_choice_class %>">
+      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+      <%= hidden_field_tag "voice[choice_id]", choice.id %>
+      <%= hidden_field_tag "panel_num_word", num_word %>
+      <input type="submit" value="<%= choice.text %>" />
+    </div>
+  </form>
+
+<% end %>

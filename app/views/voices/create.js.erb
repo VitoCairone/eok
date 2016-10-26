@@ -1,0 +1,1 @@
+$("#collapse<%= @panel_num_word %>").html("<%=escape_javascript(render(partial: 'questions/choice_list', locals: {question: @question, my_choice_ids: @my_choice_ids, num_word: @num_word})) %>");
