@@ -96,13 +96,7 @@ class QuestionsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def question_params
-      puts "!!!!!"
       safe_params = params.require(:question).permit(:text, :anonymous, :randomize, choices_attributes: [:id, :text])
-      # safe_params['cents'] = 5; # TODO: move to a config somewhere
-      # safe_params['user_auth_id'] = current_user_auth.id || nil
-      # puts "@@@"
-      # puts safe_params.inspect
-      # puts "~~~~~~"
       safe_params
     end
 end

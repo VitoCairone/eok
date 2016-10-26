@@ -9,7 +9,20 @@
       <%= hidden_field_tag "voice[choice_id]", choice.id %>
       <%= hidden_field_tag "panel_num_word", num_word %>
       <input type="submit" value="<%= choice.text %>" />
+
+      <!-- perhaps use a div with span-ish CSS instead -->
+      <span class="voice-count-pane">
+        <!-- NOT_A_FEATURE: this triggers a COUNT query per choice,
+          which is 15-35 querys per page. 
+          TODO: make sure the backend is preloading
+          all voice counts per question,
+          or better yet all voice counts on the page,
+          with one COUNT GROUP BY.
+        -->
+        <%= choice.voices_count %>
+      </span>
     </div>
+
   </form>
 
 <% end %>

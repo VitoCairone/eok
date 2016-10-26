@@ -5,6 +5,9 @@ class ApplicationController < ActionController::Base
 
     def current_user_auth
       @current_user_auth ||= UserAuth.find_by(id: session[:user_auth_id])
+      # puts "debug/ current_user_auth"
+      puts @current_user_auth
+      # puts "/debug"
     end
 
   helper_method :current_user_auth
