@@ -3,12 +3,16 @@
    "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"]
 %>
 
-<% my_choice_ids = @my_voices.map { |voice| voice.choice_id } %>
+<% all_my_choice_ids = @my_voices.map { |voice| voice.choice_id } %>
 
 <% num = 1 %>
 <div class="panel-group" id="accordion">
   <% @questions.each do |question| %>
 
+    <!-- DANGER: may be generating queries here
+         TODO: ensure this data is already present -->
+    <% question_choice_ids = question.choices.map { |x| x.id } %>
+    <% my_choice_ids = all_my_choice_ids & question_choice_ids %>
     <% num_word = num_words[num] %>
 
     <div class="panel panel-default" id="panel<%= num %>">

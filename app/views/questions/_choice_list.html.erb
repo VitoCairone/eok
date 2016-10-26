@@ -1,3 +1,5 @@
+<% i_voiced = (my_choice_ids.length > 0) %>
+
 <% question.choices.each do |choice| %>
 
   <% my_choice_class = 'open-choice' %>
@@ -11,7 +13,7 @@
       <input type="submit" value="<%= choice.text %>" />
 
       <!-- perhaps use a div with span-ish CSS instead -->
-      <span class="voice-count-pane">
+      <span class="<%= 'hidden' unless i_voiced %> voice-count-pane">
         <!-- NOT_A_FEATURE: this triggers a COUNT query per choice,
           which is 15-35 querys per page. 
           TODO: make sure the backend is preloading

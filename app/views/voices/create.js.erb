@@ -1,1 +1,9 @@
+// note that since voice creation proceeds only from
+// questions/index view, this operates on that view
 $("#collapse<%= @panel_num_word %>").html("<%=escape_javascript(render(partial: 'questions/choice_list', locals: {question: @question, my_choice_ids: @my_choice_ids, num_word: @num_word})) %>");
+
+//Don't use this to remove the hidden class; since we're re-rendering
+//the partial every time anyway, and we want questions already voiced
+//to also be visible, it makes sense to render the field on the back end.
+//But if we were doing it here, this would work.
+//$("#collapse<%= @panel_num_word %> .voice-count-pane").removeClass('hidden');
