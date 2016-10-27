@@ -25,14 +25,31 @@
           <%= question.text %>
 
           <!-- pass form -->
-          <div class="pass-container" style="float: right; clear: both;">
-            <form action="/voices" method="post" data-remote="true">
+          <div class="pass-container button-pane" style="float: right; clear: both;">
+
+            <!-- this form is for style, does nothing,
+            and doesn't block its event. Even the character change
+            is not driven by the button, but responds to the collapse
+            event behind via a click handler in questions.coffee -->
+            <form data-remote="true" style="display: inline;">
+              <input class="play-button" type="submit" value=&#9658; >
+            </form>
+
+            <!-- this form does something, triggering a voice/create.
+              The button also stops propagation to the panel-heading
+              behind it via a click handler in questions.coffee -->
+            <form action="/voices" method="post" data-remote="true"
+              style="display: inline;">
               <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
               <%= hidden_field_tag "voice[choice_id]", pass_choice_id %>
               <%= hidden_field_tag "panel_num_word", num_word %>
               <input class="pass-button" type="submit" value="X" />
             </form>
           </div>
+
+          <!-- <div class="arrow-container" style="float: right; clear: both;">
+
+          </div> -->
 
         </h4>
       </div>
