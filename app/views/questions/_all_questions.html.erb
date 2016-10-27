@@ -14,50 +14,11 @@
     <% question_choice_ids = question.choices.map { |x| x.id } %>
     <% my_choice_ids = all_my_choice_ids & question_choice_ids %>
     <% num_word = num_words[num] %>
-    <% pass_choice_id = question.pass_choice_id %>
 
-    <div class="panel panel-default" id="panel<%= num %>">
-      <div class="panel-heading"
-       onclick="location.href='#';" style="cursor: pointer;"
-       data-toggle="collapse" data-target="#collapse<%= num_word %>" 
-       data-remote="true" data-parent="#accordion">
-        <h4 class="panel-title">
-          <%= question.text %>
+    <div class="panel panel-default" id="panel<%= num_word %>">
 
-          <!-- pass form -->
-          <div class="pass-container button-pane" style="float: right; clear: both;">
+      <%= render partial: "questions/q_panel_content", locals: {question: question, my_choice_ids: my_choice_ids, num_word: num_word} %>
 
-            <!-- this form is for style, does nothing,
-            and doesn't block its event. Even the character change
-            is not driven by the button, but responds to the collapse
-            event behind via a click handler in questions.coffee -->
-            <form data-remote="true" style="display: inline;">
-              <input class="play-button" type="submit" value=&#9658; >
-            </form>
-
-            <!-- this form does something, triggering a voice/create.
-              The button also stops propagation to the panel-heading
-              behind it via a click handler in questions.coffee -->
-            <form action="/voices" method="post" data-remote="true"
-              style="display: inline;">
-              <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-              <%= hidden_field_tag "voice[choice_id]", pass_choice_id %>
-              <%= hidden_field_tag "panel_num_word", num_word %>
-              <input class="pass-button" type="submit" value="X" />
-            </form>
-          </div>
-
-          <!-- <div class="arrow-container" style="float: right; clear: both;">
-
-          </div> -->
-
-        </h4>
-      </div>
-      <div id="collapse<%= num_word %>" class="panel-collapse collapse">
-      
-        <%= render partial: "questions/choice_list", locals: {question: question, my_choice_ids: my_choice_ids, num_word: num_word} %>
-          
-      </div>
     </div>
 
     <% num += 1 %>

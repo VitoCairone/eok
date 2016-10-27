@@ -1,0 +1,35 @@
+<!-- todo: remove pass-container class -->
+<div id="buttons<%= num_word %>" class="pass-container button-pane" style="float: right; clear: both;">
+
+  <!-- this form is for style, does nothing,
+  and doesn't block its event. Even the character change
+  is not driven by the button, but responds to the collapse
+  event behind via a click handler in questions.coffee -->
+  <% play_color = 'black' %>
+  <% pass_color = 'black' %>
+  <% if my_choice_ids.length > 0 %>
+    <% if my_choice_ids[0] == question.pass_choice_id %>
+      <% play_color = 'grey' %>
+      <% pass_color = 'red' %>
+    <% else %>
+      <% play_color = 'green' %>
+      <% pass_color = 'grey' %>
+    <% end %>
+  <% end %>
+
+  <form data-remote="true" style="display: inline;">
+    <!-- use a class instead of inline styles-->
+    <input class="play-button" type="submit" value=&#9658; style="color: <%= play_color %>;"/>
+  </form>
+
+  <!-- this form does something, triggering a voice/create.
+    The button also stops propagation to the panel-heading
+    behind it via a click handler in questions.coffee -->
+  <form action="/voices" method="post" data-remote="true"
+    style="display: inline;">
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+    <%= hidden_field_tag "voice[choice_id]", question.pass_choice_id %>
+    <%= hidden_field_tag "panel_num_word", num_word %>
+    <input class="pass-button" type="submit" value="X" style="color: <%= pass_color %>;"/>
+  </form>
+</div>

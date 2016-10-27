@@ -1,0 +1,17 @@
+<div class="panel-heading"
+ onclick="location.href='#';" style="cursor: pointer;"
+ data-toggle="collapse" data-target="#collapse<%= num_word %>" 
+ data-remote="true" data-parent="#accordion">
+  <h4 class="panel-title">
+  
+    <%= question.text %>
+
+    <%= render partial: "questions/q_button_pane", locals: {question: question, my_choice_ids: my_choice_ids, num_word: num_word} %>
+
+  </h4>
+</div>
+<div id="collapse<%= num_word %>" class="panel-collapse collapse">
+
+  <%= render partial: "questions/choice_list", locals: {question: question, my_choice_ids: my_choice_ids, num_word: num_word} %>
+    
+</div>

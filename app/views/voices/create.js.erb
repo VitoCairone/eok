@@ -1,6 +1,16 @@
 // note that since voice creation proceeds only from
 // questions/index view, this operates on that view
+
+
+// recreate the appropriate questions/choice_list with updated server data
 $("#collapse<%= @panel_num_word %>").html("<%=escape_javascript(render(partial: 'questions/choice_list', locals: {question: @question, my_choice_ids: @my_choice_ids, num_word: @num_word})) %>");
+
+//
+// ISSUE: this method resets the state of the play/expanded button to its default,
+// causing bad changes and wiggling
+//
+
+$("#buttons<%= @panel_num_word %>").html("<%=escape_javascript(render(partial: 'questions/q_button_pane', locals: {question: @question, my_choice_ids: @my_choice_ids, num_word: @num_word})) %>");
 
 //Don't use this to remove the hidden class; since we're re-rendering
 //the partial every time anyway, and we want questions already voiced

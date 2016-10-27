@@ -12,8 +12,8 @@ $(document).ready ->
   # alters its collapsed class, rather than this
   # 'synced' on-click toggle
 
-  # the play button changes regardless the button
-  # itself or the panel behind it was clicked
+  # the play button changes regardless whether the
+  # button itself or the panel behind it was clicked
   $('.panel-heading').click (evt) ->
     button = $(this).find('.play-button')
     console.log(button.val())

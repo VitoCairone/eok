@@ -1,6 +1,13 @@
-<% i_voiced = (my_choice_ids.length > 0) %>
+<% i_voiced = (my_choice_ids.length > 0) && (my_choice_ids[0] != question.pass_choice_id) %>
 
-<% question.choices.each do |choice| %>
+<% question_choices = question.choices %>
+
+<!-- TODO: find a way to reshuffle only on refresh and
+  possibly collapse/expand, but NOT after voicing, as this
+  is jarring -->
+<% # question_choices = question.choices.shuffle if question.randomize %>
+
+<% question_choices.each do |choice| %>
 
   <% next if choice.ordinality == 0 %>
 

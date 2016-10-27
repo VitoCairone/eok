@@ -43,6 +43,9 @@ class VoicesController < ApplicationController
     @question = Question.find(question_id)
     @num_word = @panel_num_word
     @my_choice_ids = [choice.id]
+    @choice_is_pass = (choice.ordinality == 0)
+
+    # procedure follows to voices/create.js.erb
   end
 
   # PATCH/PUT /voices/1
