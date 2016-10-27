@@ -50,11 +50,15 @@ class QuestionsController < ApplicationController
     @question.user_auth = current_user_auth
     @question.cents = 5
 
-    # TODO: add Pass as a choice with ordinality 0
-    # @question.choices.build{text: "Pass", is_pass: true, ordinality: 0}
-
     respond_to do |format|
       if @question.save
+
+        # with the question saved, add one more choice which is the pass.
+        # prefer to create this along with other choices if possible,
+        # without opening integrity vulnerabilities to bad requests.
+        @question.choices.build(text: 'pass', ordinality: 0)
+        @question.save
+
         format.html { redirect_to @question, notice: 'Question was successfully created.' }
         format.json { render :show, status: :created, location: @question }
       else

@@ -2,6 +2,8 @@
 
 <% question.choices.each do |choice| %>
 
+  <% next if choice.ordinality == 0 %>
+
   <% my_choice_class = 'open-choice' %>
   <% my_choice_class = 'my-choice' if my_choice_ids.include? choice.id %>
   

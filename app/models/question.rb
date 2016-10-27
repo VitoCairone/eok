@@ -13,6 +13,12 @@ class Question < ApplicationRecord
     user_auth.name
   end
 
+  def pass_choice_id
+    # TODO: seems like a better idea to just track this as 
+    # a field on the question
+    choices.where(ordinality: 0).first.id
+  end
+
   def self.get_unseen_for(some_user_auth, limit=100)
     return nil unless some_user_auth
     Question.includes(Choice.find_by(user_auth: some_user.id))

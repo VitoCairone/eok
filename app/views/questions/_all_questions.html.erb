@@ -14,6 +14,7 @@
     <% question_choice_ids = question.choices.map { |x| x.id } %>
     <% my_choice_ids = all_my_choice_ids & question_choice_ids %>
     <% num_word = num_words[num] %>
+    <% pass_choice_id = question.pass_choice_id %>
 
     <div class="panel panel-default" id="panel<%= num %>">
       <div class="panel-heading"
@@ -22,6 +23,17 @@
        data-remote="true" data-parent="#accordion">
         <h4 class="panel-title">
           <%= question.text %>
+
+          <!-- pass form -->
+          <div class="pass-container" style="float: right; clear: both;">
+            <form action="/voices" method="post" data-remote="true">
+              <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+              <%= hidden_field_tag "voice[choice_id]", pass_choice_id %>
+              <%= hidden_field_tag "panel_num_word", num_word %>
+              <input class="pass-button" type="submit" value="X" />
+            </form>
+          </div>
+
         </h4>
       </div>
       <div id="collapse<%= num_word %>" class="panel-collapse collapse">
