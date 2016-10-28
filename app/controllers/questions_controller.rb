@@ -6,8 +6,10 @@ class QuestionsController < ApplicationController
   # GET /questions
   # GET /questions.json
   def index
+    puts "in index method"
     # @ questions = Questions.get_unseen_for(current_user_auth, 5)
     @questions = Question.includes(:choices).order(cents: :desc).limit(5)
+    puts "index first step complete"
     @my_voices = Voice.where(user_auth_id: current_user_auth.id)
   end
 
@@ -107,11 +109,13 @@ class QuestionsController < ApplicationController
     end
 
     def store_return_to
+      puts "testing s_r_t"
       session[:return_to] = request.url
     end
 
     # Can't interact without a login
     def require_logged_in
+      puts "testing r_l_i"
       redirect_to '/auth/facebook' unless current_user_auth
     end
 end
