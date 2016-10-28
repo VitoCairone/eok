@@ -1,0 +1,20 @@
+*****
+
+Question.get_unseen_for
+will need to respect the current page,
+so we CANNOT rerun a DB query on each load;
+
+The app either needs to save necessary information about
+its own view state across refreshes or to use the DB to
+hold some information about the view state, e.g. the current
+five.
+
+For MVP, this is not the worst thing; we will
+allow Refreshing to fetch new questions as long
+as click actions (voicing, passing, donating)
+never unexpectedly cause a new fetch.
+
+*****
+
+Clicking X also causes the window to expand or collapse;
+this should be prevented

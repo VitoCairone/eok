@@ -7,8 +7,8 @@ class QuestionsController < ApplicationController
   # GET /questions.json
   def index
     puts "in index method"
-    # @ questions = Questions.get_unseen_for(current_user_auth, 5)
-    @questions = Question.includes(:choices).order(cents: :desc).limit(5)
+    @questions = Question.get_unseen_for(current_user_auth, 5)
+    # @questions = Question.includes(:choices).order(cents: :desc).limit(5)
     puts "index first step complete"
     @my_voices = Voice.where(user_auth_id: current_user_auth.id)
   end

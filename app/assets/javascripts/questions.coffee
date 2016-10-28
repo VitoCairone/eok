@@ -2,8 +2,13 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
-$(document).ready ->
+# TODO: investigate if delegation, installing the click handlers
+# on higher elements outside the rewritten scope, might be a
+# better solution
+attachButtonPaneClickHandlers = ->
+  console.log("attaching")
   $('.pass-button').click (evt) ->
+    console.log("!!!!")
     evt.stopPropagation()
     return true # keep the direct behavior
 
@@ -16,7 +21,7 @@ $(document).ready ->
   # button itself or the panel behind it was clicked
   $('.panel-heading').click (evt) ->
     button = $(this).find('.play-button')
-    console.log(button.val())
+    # console.log(button.val())
 
     # TODO: this is lazy, instead detect and
     # change appropriate with the actual
@@ -32,3 +37,8 @@ $(document).ready ->
 
   return
 
+# TODO: find how Rails does its namespacing and perhaps use that
+window.QuestionsJS = {};
+window.QuestionsJS.attachButtonPaneClickHandlers = attachButtonPaneClickHandlers
+$(document).ready(attachButtonPaneClickHandlers);
+# this is also called in views/voices/create.js.erb

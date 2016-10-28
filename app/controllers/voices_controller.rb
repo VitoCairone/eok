@@ -45,7 +45,7 @@ class VoicesController < ApplicationController
     @my_choice_ids = [choice.id]
     @choice_is_pass = (choice.ordinality == 0)
 
-    # procedure follows to voices/create.js.erb
+    # procedure follows to views/voices/create.js.erb
   end
 
   # PATCH/PUT /voices/1

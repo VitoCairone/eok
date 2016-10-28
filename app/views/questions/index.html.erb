@@ -3,9 +3,22 @@
 <h2>Everyone Knows | Home </h2>
 
 <div id="questions-top">
-  <%= render 'questions/all_questions' %>
+  <% if not (@questions.empty? or @questions.nil?)%>
+    <%= render 'questions/all_questions' %>
+  <% else %>
+    <h2>All Questions Seen</h2>
+  <% end %>
 </div>
 
-<br>
-
-<%= link_to 'New Question', new_question_path %>
+<div>
+  &nbsp;
+  <%= link_to 'Write New', new_question_path %>
+  &nbsp;|&nbsp;
+  <%= link_to 'Seen', ''%>
+  &nbsp;|&nbsp;
+  <%= link_to 'Passed', ''%>
+  &nbsp;|&nbsp;
+  <!-- Next Qs link should be greyed out, and activate
+       only on responding to all active Q -->
+  <%= link_to 'Next', '' %>
+<div>
