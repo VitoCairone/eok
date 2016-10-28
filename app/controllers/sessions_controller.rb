@@ -7,7 +7,7 @@ class SessionsController < ApplicationController
     rescue
       flash[:warning] = 'There was an error trying to authenticate you.'
     end
-    redirect_to new_thought_path
+    redirect_back
   end
 
   def destroy
@@ -16,5 +16,9 @@ class SessionsController < ApplicationController
       flash[:success] = 'Logged out!'
     end
     redirect_to new_thought_path
+  end
+
+  def redirect_back
+    redirect_to session[:return_to]
   end
 end

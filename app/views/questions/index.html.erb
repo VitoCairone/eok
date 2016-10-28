@@ -9,3 +9,7 @@
 <br>
 
 <%= link_to 'New Question', new_question_path %>
+&nbsp;|&nbsp;
+<% # next_questions_path should be distinct from questions_path %>
+<% # so that a page refresh doesn't unexpectedly fetch new questions %>
+<%= # link_to 'Next Page', next_questions %>

@@ -1,4 +1,6 @@
 class QuestionsController < ApplicationController
+  before_filter :store_return_to
+  before_filter :require_logged_in
   before_action :set_question, only: [:show, :edit, :update, :destroy]
 
   # GET /questions
@@ -102,5 +104,14 @@ class QuestionsController < ApplicationController
     def question_params
       safe_params = params.require(:question).permit(:text, :anonymous, :randomize, choices_attributes: [:id, :text])
       safe_params
+    end
+
+    def store_return_to
+      session[:return_to] = request.url
+    end
+
+    # Can't interact without a login
+    def require_logged_in
+      redirect_to '/auth/facebook' unless current_user_auth
     end
 end
