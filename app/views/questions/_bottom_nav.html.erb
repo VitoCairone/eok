@@ -1,0 +1,16 @@
+<div>
+  &nbsp;
+  <%= link_to 'Write New', new_question_path %>
+  &nbsp;|&nbsp;
+  <%= link_to 'Home', questions_path %>
+  &nbsp;|&nbsp;
+  <%= link_to 'Voiced', voiced_questions_path %>
+  &nbsp;|&nbsp;
+  <%= link_to 'Passed', passed_questions_path %>
+  &nbsp;|&nbsp;
+  <!-- In Home view, Next Qs link should be greyed out,
+       and activate only on responding to all active Q.
+       Next is always available in other views -->
+  <!-- this only works for Home view -->
+  <%= link_to 'Next', '' %>
+</div>

@@ -1,0 +1,6 @@
+// See http://www.danshort.com/HTMLentities/?w=dingb
+// also https://dev.w3.org/html5/html-author/charref
+
+Heavy check mark  ✔ — &#10004;  &#x2714;
+Heavy multiplication X  ✖ — &#10006;  &#x2716;
+Black Star  ★ &#9733;  &#x2605;

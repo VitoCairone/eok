@@ -1,14 +1,12 @@
 <p id="notice"><%= notice %></p>
 
-<div id="stars-header">
-  <%= render 'questions/stars_header' %>
-</div>
+<h2>Everyone Knows | Voiced </h2>
 
-<div id="questions-top home-questions-top">
+<div id="questions-top voiced-questions-top">
   <% if not (@questions.nil? or @questions.empty?) %>
     <%= render 'questions/all_questions' %>
   <% else %>
-    <h2>All Questions Seen</h2>
+    <h2>No Voiced Questions</h2>
   <% end %>
 </div>
 

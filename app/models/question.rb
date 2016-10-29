@@ -24,8 +24,6 @@ class Question < ApplicationRecord
   end
 
   def self.get_unseen_for(some_user_auth, limit=100)
-    # simple:
-    # Question.includes(:choices).order(cents: :desc).limit(5)
     return nil unless some_user_auth
     return nil unless some_user_auth.id.is_a? Integer
     Question.joins("LEFT OUTER JOIN voices ON voices.question_id = questions.id
@@ -35,4 +33,25 @@ class Question < ApplicationRecord
             .order(cents: :desc).limit(limit)
   end
 
+  def self.get_voiced_for(some_user_auth, limit=100)
+    return nil unless some_user_auth
+    return nil unless some_user_auth.id.is_a? Integer
+    # TODO: add is_passed to voices and join on is_passed: false
+    Question.eager_load(:choices)
+            .joins("JOIN voices ON voices.question_id = questions.id
+                    AND voices.user_auth_id = #{some_user_auth.id}
+                    AND voices.is_pass = false")
+            .order(cents: :desc).limit(limit)
+  end
+
+  def self.get_passed_for(some_user_auth, limit=100)
+    return nil unless some_user_auth
+    return nil unless some_user_auth.id.is_a? Integer
+    # TODO: add is_passed and join on is_passed: true
+    Question.eager_load(:choices)
+            .joins("JOIN voices ON voices.question_id = questions.id
+                    AND voices.user_auth_id = #{some_user_auth.id}
+                    AND voices.is_pass = true")
+            .order(cents: :desc).limit(limit)
+  end
 end

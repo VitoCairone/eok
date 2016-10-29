@@ -11,10 +11,21 @@
     </div>
   <% end %>
 
+  <h3>Question</h3>
+
   <div class="field">
-    <%= f.label :text %>
+    <%= f.label :question_text, class: 'hidden' %>
     <%= f.text_area :text %>
   </div>
+
+  <h3>Choices</h3>
+
+  <%= f.fields_for :choices do |choice_f| %>
+    <div class="field">
+      <%= choice_f.label :answer_text, class: 'hidden' %>
+      <%= choice_f.text_area :text %>
+    </div>
+  <% end %>
 
   <div class="field">
     <%= f.label :anonymous %>
@@ -25,13 +36,6 @@
     <%= f.label :randomize %>
     <%= f.check_box :randomize %>
   </div>
-
-  <%= f.fields_for :choices do |choice_f| %>
-    <div class="field">
-      <%= choice_f.label :text %>
-      <%= choice_f.text_area :text %>
-    </div>
-  <% end %>
 
   <div class="actions">
     <%= f.submit %>

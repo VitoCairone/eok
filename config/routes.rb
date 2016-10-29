@@ -3,7 +3,10 @@ Rails.application.routes.draw do
 
   resources :thoughts
 
-  resources :questions
+  resources :questions do
+    get 'voiced', on: :collection
+    get 'passed', on: :collection
+  end
 
   resources :choices, only: [:index, :show]
 

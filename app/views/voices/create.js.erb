@@ -10,6 +10,11 @@ $("#collapse<%= @panel_num_word %>").html("<%=escape_javascript(render(partial: 
 //
 $("#buttons<%= @panel_num_word %>").html("<%=escape_javascript(render(partial: 'questions/q_button_pane', locals: {question: @question, my_choice_ids: @my_choice_ids, num_word: @num_word})) %>");
 
+// Also re-render the stars header
+// This is a simple operation and probably a good place to start
+// when replacing tflickery 'rerender' methods with frontend animation
+$("#stars-header").html("<%=escape_javascript(render(partial: 'questions/stars_header')) %>");
+
 // defined in assets/javascripts/questions.coffee
 // jQuery 'should' clean up the old elements and handlers in processing .html()
 // TODO: possibly use a delegated handler to prevent this replacement

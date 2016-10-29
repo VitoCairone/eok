@@ -4,17 +4,43 @@ class QuestionsController < ApplicationController
   before_action :set_question, only: [:show, :edit, :update, :destroy]
 
   # GET /questions
-  # GET /questions.json
   def index
-    puts "in index method"
+    # puts "in index method"
     @questions = Question.get_unseen_for(current_user_auth, 5)
     # @questions = Question.includes(:choices).order(cents: :desc).limit(5)
-    puts "index first step complete"
+    # puts "index first step complete"
+    
     @my_voices = Voice.where(user_auth_id: current_user_auth.id)
+    # @my_voices = []
+  end
+
+  # GET /questions/voiced
+  def voiced
+    @questions = Question.get_voiced_for(current_user_auth, 5)
+    # From this join we already know all the user's voices,
+    # but we awkwardly compute them again many times.
+    # TODO: refactor this to use existing data better
+    @my_voices = Voice.where(user_auth_id: current_user_auth.id)
+    # @my_voices = Voice.joins(:choices)
+    #   .where(user_auth_id: current_user_auth.id)
+    #   .where.not(choices: {ordinality: 0})
+
+    render :voiced
+  end
+
+  # GET /questions/passed
+  def passed
+    @questions = Question.get_passed_for(current_user_auth, 5)
+    @my_voices = Voice.where(user_auth_id: current_user_auth.id)
+    # @my_voices = Voice.joins(:choices).where(
+    #   user_auth_id: current_user_auth.id,
+    #   choices: {ordinality: 0 }
+    # )
+
+    render :passed
   end
 
   # GET /questions/1
-  # GET /questions/1.json
   def show
   end
 
@@ -45,6 +71,7 @@ class QuestionsController < ApplicationController
     idx = 1;
     choices_attribs.each do |k, v|
       v['ordinality'] = idx;
+      v['is_pass'] = false;
       idx += 1;
     end
 
@@ -60,7 +87,7 @@ class QuestionsController < ApplicationController
         # with the question saved, add one more choice which is the pass.
         # prefer to create this along with other choices if possible,
         # without opening integrity vulnerabilities to bad requests.
-        @question.choices.build(text: 'pass', ordinality: 0)
+        @question.choices.build(text: 'pass', ordinality: 0, is_pass: true)
         @question.save
 
         format.html { redirect_to @question, notice: 'Question was successfully created.' }
@@ -117,5 +144,6 @@ class QuestionsController < ApplicationController
     def require_logged_in
       puts "testing r_l_i"
       redirect_to '/auth/facebook' unless current_user_auth
+      current_user_auth.star_count = 0 unless current_user_auth.star_count
     end
 end

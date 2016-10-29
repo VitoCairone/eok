@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161019024227) do
+ActiveRecord::Schema.define(version: 20161029201010) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(version: 20161019024227) do
     t.string   "url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "star_count"
     t.index ["provider", "uid"], name: "index_user_auths_on_provider_and_uid", unique: true, using: :btree
     t.index ["provider"], name: "index_user_auths_on_provider", using: :btree
     t.index ["uid"], name: "index_user_auths_on_uid", using: :btree
@@ -65,6 +66,7 @@ ActiveRecord::Schema.define(version: 20161019024227) do
     t.integer  "choice_id"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
+    t.boolean  "is_pass"
     t.index ["choice_id"], name: "index_voices_on_choice_id", using: :btree
     t.index ["question_id"], name: "index_voices_on_question_id", using: :btree
     t.index ["user_auth_id"], name: "index_voices_on_user_auth_id", using: :btree
