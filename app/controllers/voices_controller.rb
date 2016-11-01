@@ -1,4 +1,5 @@
 class VoicesController < ApplicationController
+  before_action :set_voice, only: [:show]
 
   # GET /voices
   # GET /voices.json
@@ -41,22 +42,13 @@ class VoicesController < ApplicationController
                  .map{ |c| c.voices_count}
                  .max
 
-    # puts "@@@@"
-    # puts Question.find(question_id)
-    # puts Question.find(question_id).choices.map{ |c| c.voices_count}
-    # puts Question.find(question_id).choices.map{ |c| c.voices_count}.max    
-
     if (choice.voices_count >= max_voices)
       current_user_auth.star_count = 0 unless current_user_auth.star_count      
       current_user_auth.star_count += 1
-      # puts "STARS set to"
-      # puts current_user_auth.star_count
       current_user_auth.save
     else
       if current_user_auth.star_count != 0
         current_user_auth.star_count = 0
-        # puts "STARS set to"
-        # puts current_user_auth.star_count
         current_user_auth.save
       end
     end
@@ -83,9 +75,9 @@ class VoicesController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    # def set_voice
-    #   @voice = Voice.find(params[:id])
-    # end
+    def set_voice
+      @voice = Voice.find(params[:id])
+    end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def voice_params

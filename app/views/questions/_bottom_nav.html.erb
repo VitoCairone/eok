@@ -1,3 +1,10 @@
+<!-- TODO: override will_paginate on Home tab by disabling
+     every button but '1'; enable '2' and 'Next' on page
+     complete -->
+<!-- TODO: including will_paginate largely increases the
+     vertical span of its container vs. without it, even
+     though the text is the same size; take control
+     over this -->
 <div>
   &nbsp;
   <%= link_to 'Write New', new_question_path %>
@@ -8,9 +15,5 @@
   &nbsp;|&nbsp;
   <%= link_to 'Passed', passed_questions_path %>
   &nbsp;|&nbsp;
-  <!-- In Home view, Next Qs link should be greyed out,
-       and activate only on responding to all active Q.
-       Next is always available in other views -->
-  <!-- this only works for Home view -->
-  <%= link_to 'Next', '' %>
+  <%= will_paginate @questions %>
 </div>

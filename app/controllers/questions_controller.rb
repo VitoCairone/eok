@@ -6,7 +6,7 @@ class QuestionsController < ApplicationController
   # GET /questions
   def index
     # puts "in index method"
-    @questions = Question.get_unseen_for(current_user_auth, 5)
+    @questions = Question.get_unseen_for(current_user_auth).paginate(page: 1, per_page: 5)
     # @questions = Question.includes(:choices).order(cents: :desc).limit(5)
     # puts "index first step complete"
     
@@ -16,7 +16,9 @@ class QuestionsController < ApplicationController
 
   # GET /questions/voiced
   def voiced
-    @questions = Question.get_voiced_for(current_user_auth, 5)
+    #@questions = Question.get_voiced_for(current_user_auth)
+    fetch_page = params[:page] or 1
+    @questions = Question.get_voiced_for(current_user_auth).paginate(page: fetch_page, per_page: 5)
     # From this join we already know all the user's voices,
     # but we awkwardly compute them again many times.
     # TODO: refactor this to use existing data better
@@ -30,7 +32,8 @@ class QuestionsController < ApplicationController
 
   # GET /questions/passed
   def passed
-    @questions = Question.get_passed_for(current_user_auth, 5)
+    fetch_page = params[:page] or 1
+    @questions = Question.get_passed_for(current_user_auth).paginate(page: fetch_page, per_page: 5)
     @my_voices = Voice.where(user_auth_id: current_user_auth.id)
     # @my_voices = Voice.joins(:choices).where(
     #   user_auth_id: current_user_auth.id,
@@ -144,6 +147,5 @@ class QuestionsController < ApplicationController
     def require_logged_in
       puts "testing r_l_i"
       redirect_to '/auth/facebook' unless current_user_auth
-      current_user_auth.star_count = 0 unless current_user_auth.star_count
     end
 end

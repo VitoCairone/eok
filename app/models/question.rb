@@ -23,17 +23,17 @@ class Question < ApplicationRecord
     arr.length > 0 and arr[0] == pass_choice_id
   end
 
-  def self.get_unseen_for(some_user_auth, limit=100)
+  def self.get_unseen_for(some_user_auth)
     return nil unless some_user_auth
     return nil unless some_user_auth.id.is_a? Integer
     Question.joins("LEFT OUTER JOIN voices ON voices.question_id = questions.id
                    AND voices.user_auth_id = #{some_user_auth.id}")
             .includes(:choices)
             .where(voices: {id: nil})
-            .order(cents: :desc).limit(limit)
+            .order(cents: :desc)
   end
 
-  def self.get_voiced_for(some_user_auth, limit=100)
+  def self.get_voiced_for(some_user_auth)
     return nil unless some_user_auth
     return nil unless some_user_auth.id.is_a? Integer
     # TODO: add is_passed to voices and join on is_passed: false
@@ -41,10 +41,10 @@ class Question < ApplicationRecord
             .joins("JOIN voices ON voices.question_id = questions.id
                     AND voices.user_auth_id = #{some_user_auth.id}
                     AND voices.is_pass = false")
-            .order(cents: :desc).limit(limit)
+            .order(cents: :desc)
   end
 
-  def self.get_passed_for(some_user_auth, limit=100)
+  def self.get_passed_for(some_user_auth)
     return nil unless some_user_auth
     return nil unless some_user_auth.id.is_a? Integer
     # TODO: add is_passed and join on is_passed: true
@@ -52,6 +52,6 @@ class Question < ApplicationRecord
             .joins("JOIN voices ON voices.question_id = questions.id
                     AND voices.user_auth_id = #{some_user_auth.id}
                     AND voices.is_pass = true")
-            .order(cents: :desc).limit(limit)
+            .order(cents: :desc)
   end
 end
