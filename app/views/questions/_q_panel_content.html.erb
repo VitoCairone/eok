@@ -5,6 +5,11 @@
   <h4 class="panel-title">
   
     <%= question.text %>
+    <% unless question.anonymous %>
+      <small><em>
+      -&nbsp;<%= question.user_auth.name %>
+      </em></small>
+    <% end %>
 
     <%= render partial: "questions/q_button_pane", locals: {question: question, my_choice_ids: my_choice_ids, num_word: num_word} %>
 

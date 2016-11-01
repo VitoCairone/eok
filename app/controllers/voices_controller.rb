@@ -37,10 +37,8 @@ class VoicesController < ApplicationController
     # COUNT(voices) FROM choices JOIN voices ON
     # voices.choice_id = choices.id GROUP BY choice_id
     # -- if DB becomes large, will need to use caching instead
-    max_voices = Question.find(question_id)
-                 .choices
-                 .map{ |c| c.voices_count}
-                 .max
+    @question = Question.find(question_id)
+    max_voices = @question.choices.map{ |c| c.voices_count}.max
 
     if (choice.voices_count >= max_voices)
       current_user_auth.star_count = 0 unless current_user_auth.star_count      
@@ -62,10 +60,16 @@ class VoicesController < ApplicationController
 
     @voice.save # need to handle errors here better
 
+    unless @choice_is_pass
+      @question.cents += 2
+      current_user_auth.cents -= 2
+      @question.save
+      current_user_auth.save
+    end
+
     # these instance variables are needed for the JavaScript
     # which will replace the choices list clientside
     @panel_num_word = params['panel_num_word']
-    @question = Question.find(question_id)
     @num_word = @panel_num_word
     @my_choice_ids = [choice.id]
     @star_count = current_user_auth.star_count

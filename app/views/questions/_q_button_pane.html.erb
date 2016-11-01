@@ -17,6 +17,8 @@
     <% end %>
   <% end %>
 
+  <%= question.cents or 0 %>&cent;
+
   <form data-remote="true" style="display: inline;">
     <!-- use a class instead of inline styles-->
     <input class="play-button" type="submit" value=&#9658; style="color: <%= play_color %>;"/>
