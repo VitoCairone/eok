@@ -14,24 +14,24 @@
   <% my_choice_class = 'open-choice' %>
   <% my_choice_class = 'my-choice' if my_choice_ids.include? choice.id %>
   
-  <form action="/voices" class="panel-body list-group-item" method="post" data-remote="true">
-    <div class="<%= my_choice_class %>">
+  <form action="/voices" class="panel-body list-group-item <%=my_choice_class%>" method="post" data-remote="true">
+    <div class="text-stripe">
       <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
       <%= hidden_field_tag "voice[choice_id]", choice.id %>
       <%= hidden_field_tag "panel_num_word", num_word %>
-      <input type="submit" value="<%= choice.text %>" />
+      <input type="submit" class="choice-button" value="<%= choice.text %>" />
 
       <!-- perhaps use a div with span-ish CSS instead -->
-      <span class="<%= 'hidden' unless i_voiced %> voice-count-pane">
+      <div class="<%= 'hidden' unless i_voiced %> voice-count-pane">
         <!-- NOT_A_FEATURE: this triggers a COUNT query per choice,
           which is 15-35 querys per page. 
           TODO: make sure the backend is preloading
           all voice counts per question,
-          or better yet all voice counts on the page,
-          with one COUNT GROUP BY.
+          or perhaps better yet all voice counts
+          on the page, with one COUNT GROUP BY.
         -->
         <%= choice.voices_count %>
-      </span>
+      </div>
     </div>
 
   </form>

@@ -4,7 +4,7 @@
   <%= render 'questions/stars_header' %>
 </div>
 
-<div id="questions-top home-questions-top">
+<div id="home-questions-top" class="questions-top">
   <% if not (@questions.nil? or @questions.empty?) %>
     <%= render 'questions/all_questions' %>
   <% else %>
