@@ -23,8 +23,8 @@ class VoicesController < ApplicationController
     
     @choice_is_pass = (choice.ordinality == 0)
     if (current_user_auth.cents < 2 and !@choice_is_pass)
+      head :ok, content_type: "text/html"
       return
-      # ?? procedure follows to views/voices/create.js.erb?
     end
 
     return if current_user_auth.nil?
@@ -32,7 +32,7 @@ class VoicesController < ApplicationController
 
     # Before creating a voice, delete any existing voice(s) the user
     # might have for this question.
-    Voice.where(question_id: question_id, user_auth_id: user_auth_id).delete_all
+    old_voice_count = Voice.where(question_id: question_id, user_auth_id: user_auth_id).delete_all
 
     # award a star if the new choice is the most popular, before
     # creating it.
@@ -44,14 +44,15 @@ class VoicesController < ApplicationController
     @question = Question.find(question_id)
     max_voices = @question.choices.map{ |c| c.voices_count}.max
 
-    if (choice.voices_count >= max_voices)
-      current_user_auth.star_count = 0 unless current_user_auth.star_count      
-      current_user_auth.star_count += 1
-      current_user_auth.save
-    else
-      if current_user_auth.star_count != 0
-        current_user_auth.star_count = 0
+    if old_voice_count == 0 # alter stars only on first voicing
+      if ((choice.voices_count + 1) >= max_voices)
+        current_user_auth.star_count += 1
         current_user_auth.save
+      else
+        if current_user_auth.star_count != 0
+          current_user_auth.star_count = 0
+          current_user_auth.save
+        end
       end
     end
     

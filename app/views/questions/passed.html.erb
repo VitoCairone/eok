@@ -1,6 +1,8 @@
 <p id="notice"><%= notice %></p>
 
-<h2>Everyone Knows | Passed </h2>
+<div id="stars-header">
+  <%= render 'questions/stars_header' %>
+</div>
 
 <div id="passed-questions-top" class="questions-top">
   <% if not (@questions.nil? or @questions.empty?) %>
