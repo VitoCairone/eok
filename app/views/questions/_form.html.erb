@@ -11,33 +11,33 @@
     </div>
   <% end %>
 
-  <h3>Question</h3>
-
-  <div class="field">
+  <div class="field form-group">
     <%= f.label :question_text, class: 'hidden' %>
-    <%= f.text_area :text %>
+    <%= f.text_area :text, class: 'form-control', maxlength: 250 %>
   </div>
 
   <h3>Choices</h3>
 
   <%= f.fields_for :choices do |choice_f| %>
-    <div class="field">
+    <div class="field form-group">
       <%= choice_f.label :answer_text, class: 'hidden' %>
-      <%= choice_f.text_area :text %>
+      <%= choice_f.text_area :text, class: 'form-control', maxlength: 250 %>
     </div>
   <% end %>
 
-  <div class="field">
+  <div class="field form-group">
     <%= f.label :anonymous %>
-    <%= f.check_box :anonymous %>
+    <%= f.check_box :anonymous, class: 'form-control' %>
   </div>
 
-  <div class="field">
+  <div class="field form-group">
     <%= f.label :randomize %>
-    <%= f.check_box :randomize %>
+    <%= f.check_box :randomize, class: 'form-control' %>
   </div>
 
+  <!-- for bootstrap set .btn .btn-primary -->
   <div class="actions">
     <%= f.submit %>
   </div>
+
 <% end %>

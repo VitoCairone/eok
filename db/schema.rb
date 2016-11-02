@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161101225003) do
+ActiveRecord::Schema.define(version: 20161101225627) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,10 +30,10 @@ ActiveRecord::Schema.define(version: 20161101225003) do
     t.text     "text"
     t.integer  "user_auth_id"
     t.boolean  "anonymous"
-    t.integer  "cents"
+    t.integer  "cents",        default: 5
     t.boolean  "randomize"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
     t.index ["user_auth_id"], name: "index_questions_on_user_auth_id", using: :btree
   end
 
