@@ -1,8 +1,12 @@
 <p id="notice"><%= notice %></p>
 
-<div id="stars-header">
-  <%= render 'questions/stars_header' %>
-</div>
+<h2>
+  Everyone Knows |
+  Home |
+  <span id="stars-header">
+    <%= render partial: 'questions/stars_header' %>
+  </span>
+</h2>
 
 <div id="home-questions-top" class="questions-top">
   <% if not (@questions.nil? or @questions.empty?) %>

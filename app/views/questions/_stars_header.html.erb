@@ -7,15 +7,11 @@
      @star_count >= 5 ? 'gold' : 'black',
    ]
 %>
-
-<h2>
-  Everyone Knows | Home | 
-  <span id="star-pane" class="star-pane">
-    <span id="star1" style="color: <%= @star_colors[1] %>;">★</span>
-    <span id="star2" style="color: <%= @star_colors[2] %>;">★</span>
-    <span id="star3" style="color: <%= @star_colors[3] %>;">★</span>
-    <span id="star4" style="color: <%= @star_colors[4] %>;">★</span>
-    <span id="star5" style="color: <%= @star_colors[5] %>;">★</span>
-  </span>
-   | <%= current_user_auth.cents or 0 %>&cent;
-</h2>
+<span id="star-pane" class="star-pane">
+  <span id="star1" style="color: <%= @star_colors[1] %>;">★</span>
+  <span id="star2" style="color: <%= @star_colors[2] %>;">★</span>
+  <span id="star3" style="color: <%= @star_colors[3] %>;">★</span>
+  <span id="star4" style="color: <%= @star_colors[4] %>;">★</span>
+  <span id="star5" style="color: <%= @star_colors[5] %>;">★</span>
+</span> |
+<%= current_user_auth.cents or 0 %>&cent;

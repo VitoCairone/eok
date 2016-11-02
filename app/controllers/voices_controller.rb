@@ -17,11 +17,14 @@ class VoicesController < ApplicationController
   def create
     these_params = voice_params
 
-    choice = Choice.find(these_params['choice_id'])
+    choice_id = these_params['choice_id']
+    choice = Choice.find(choice_id)
     return if choice.nil?
     question_id = choice.question_id
     
     @choice_is_pass = (choice.ordinality == 0)
+
+    # end without action if not a pass and can't donate 2 cents
     if (current_user_auth.cents < 2 and !@choice_is_pass)
       head :ok, content_type: "text/html"
       return
@@ -29,6 +32,12 @@ class VoicesController < ApplicationController
 
     return if current_user_auth.nil?
     user_auth_id = current_user_auth.id
+
+    # end without action if the choice already exists
+    if Voice.exists?(user_auth_id: user_auth_id, choice_id: choice_id)
+      head :ok, content_type: "text/html"
+      return
+    end
 
     # Before creating a voice, delete any existing voice(s) the user
     # might have for this question.
