@@ -7,12 +7,12 @@
 
 <p>
   <strong>Author:</strong>
-  <%= @question.user_auth.name %>
-</p>
-
-<p>
-  <strong>Anonymous:</strong>
-  <%= @question.anonymous %>
+  <% if @question.anonymous %>
+    <%= 'Anonymous' %>
+    <%= '(you!)' if current_user_auth and (@question.user_auth.id == current_user_auth.id) %>
+  <% else %>
+    <%= @question.user_auth.name %>
+  <% end %>
 </p>
 
 <p>

@@ -21,6 +21,22 @@ a.fill-div {
   background-color: #e0e0e0;
 }
 
+
+@keyframes example {
+  0%   {background-color: red;}
+  25%  {background-color: yellow;}
+  50%  {background-color: blue;}
+  100% {background-color: green;}
+}
+
+#star-dime {
+  width: 100px;
+  height: 100px;
+  background-color: red;
+  animation-name: example;
+  animation-duration: 4s;
+}
+
 .questions-top {
   .text-stripe {
     background-color: #f5f5f5;
@@ -42,6 +58,7 @@ a.fill-div {
     width: 6%;
     text-align: right;
   }
+
 }
 
 #new_question {

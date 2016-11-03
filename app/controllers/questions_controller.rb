@@ -6,7 +6,8 @@ class QuestionsController < ApplicationController
   # GET /questions
   def index
     # puts "in index method"
-    @questions = Question.get_unseen_for(current_user_auth).paginate(page: 1, per_page: 5)
+    fetch_page = params[:page] or 1
+    @questions = Question.get_unseen_for(current_user_auth).paginate(page: fetch_page, per_page: 5)
     # @questions = Question.includes(:choices).order(cents: :desc).limit(5)
     # puts "index first step complete"
     
