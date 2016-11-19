@@ -8,6 +8,8 @@
   <% end %>
 </div>
 
-<nav class="navbar navbar-default navbar-static-bottom" role="navigation">
-  <%= will_paginate @questions %>
-</nav>
+<% if @questions.count > 5 %>
+  <nav class="navbar navbar-default navbar-static-bottom" role="navigation">
+    <%= will_paginate @questions %>
+  </nav>
+<% end %>

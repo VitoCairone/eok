@@ -15,6 +15,8 @@ $("#buttons<%= @panel_num_word %>").html("<%=escape_javascript(render(partial: '
 // when replacing tflickery 'rerender' methods with frontend animation
 $("#stars-header").html("<%=escape_javascript(render(partial: 'questions/stars_header')) %>");
 
+$("#my-cents").html("<%= current_user_auth.cents %>");
+
 // defined in assets/javascripts/questions.coffee
 // jQuery 'should' clean up the old elements and handlers in processing .html()
 // TODO: possibly use a delegated handler to prevent this replacement
