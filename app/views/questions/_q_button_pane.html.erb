@@ -1,10 +1,7 @@
 <!-- todo: remove pass-container class -->
 <div id="buttons<%= num_word %>" class="pass-container button-pane" style="float: right; clear: both;">
 
-  <!-- this form is for style, does nothing,
-  and doesn't block its event. Even the character change
-  is not driven by the button, but responds to the collapse
-  event behind via a click handler in questions.coffee -->
+  <!-- play_color is related to play chevron which is not currently used -->
   <% play_color = 'black' %>
   <% pass_color = 'black' %>
   <% if my_choice_ids.length > 0 %>

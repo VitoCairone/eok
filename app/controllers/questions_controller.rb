@@ -6,29 +6,26 @@ class QuestionsController < ApplicationController
   # GET /questions
   def index
     @this_page = 'Home'
-    # puts "in index method"
     fetch_page = params[:page] or 1
     @questions = Question.get_unseen_for(current_user_auth).paginate(page: fetch_page, per_page: 5)
-    # @questions = Question.includes(:choices).order(cents: :desc).limit(5)
-    # puts "index first step complete"
     
     @my_voices = Voice.where(user_auth_id: current_user_auth.id)
 
     @n_unresponded = @questions.count
     # why is this not 5 when returned from a paginated request ??
     @n_unresponded = 5 if @n_unresponded > 5
-    # @my_voices = []
   end
 
   # GET /questions/voiced
   def voiced
     @this_page = 'Voiced'
-    #@questions = Question.get_voiced_for(current_user_auth)
     fetch_page = params[:page] or 1
     @questions = Question.get_voiced_for(current_user_auth).paginate(page: fetch_page, per_page: 5)
+
     # From this join we already know all the user's voices,
     # but we awkwardly compute them again many times.
     # TODO: refactor this to use existing data better
+    
     @my_voices = Voice.where(user_auth_id: current_user_auth.id)
     # @my_voices = Voice.joins(:choices)
     #   .where(user_auth_id: current_user_auth.id)

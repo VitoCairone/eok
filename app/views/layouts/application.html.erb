@@ -43,7 +43,11 @@
           <li>
             <div class="navbar-text">
               <% if @current_user_auth %>
-                Welcome, <%= @current_user_auth.name %>! You have
+                Welcome, 
+                <!-- TODO: link name to profile,
+                     with logout from profile -->
+                <%= @current_user_auth.name %>!
+                You have
                 <b><span id="my-cents">
                   <%= @current_user_auth.cents %>
                 </span></b>

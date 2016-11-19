@@ -9,8 +9,8 @@ class SessionsController < ApplicationController
     end
 
     # puts "@@@@@"
-    puts @user_auth.newbie
-    puts session[:return_to]
+    # puts @user_auth.newbie
+    # puts session[:return_to]
     if @user_auth.newbie
       @user_auth.newbie = false
       @user_auth.save
