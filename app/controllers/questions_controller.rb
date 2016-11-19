@@ -13,6 +13,10 @@ class QuestionsController < ApplicationController
     # puts "index first step complete"
     
     @my_voices = Voice.where(user_auth_id: current_user_auth.id)
+
+    @n_unresponded = @questions.count
+    # why is this not 5 when returned from a paginated request ??
+    @n_unresponded = 5 if @n_unresponded > 5
     # @my_voices = []
   end
 

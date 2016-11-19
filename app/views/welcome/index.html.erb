@@ -1,19 +1,27 @@
 <div class="eok-bucket welcome-bucket prologue-bucket">
 
-  <!-- <p>
-    Welcome to Everyone Knows, where you can find out what everyone knows.
+<div class="jumbotron">
+
+  <p>
+    Welcome, <%= current_user_auth.name %>!
   </p>
 
   <p>
-    Here is 350 ¢ !
+    Questions are ranked and shown by their ¢.
+  </p>
+
+  <p>When you contribute your voice, you also contribute your <b>2 ¢</b> to that question.
   </p>
 
   <p>
-    Share what you know to learn what everyone knows. When you give your voice, you also donate 2 of your ¢ to that question. The more ¢ a question gets, the more important it becomes, and the more everyone will see it. You get 120 ¢ free every day. 10 ¢ are awarded for matching everyone's answer five times in a row, or for every 100 ¢ gained by questions you've written.
-  </p> -->
+    ¢ are the currency of knowledge in our experiment. They not tradable for money. You earn 120 ¢ each day, 10 ¢ for matching everyone's answer 5 times, and 10 ¢ for each 100 ¢ gained by questions you've written. You can also donate ¢ to any question that you like to boost its ranking.
+  </p>
 
-  <div class="link-button">
-    <%= link_to 'Continue', questions_path %>
-  </div>
+  <p>
+    Continue to the
+    <%= link_to 'first page', questions_path %>
+  </p>
+
+</div>
 
 </div>
