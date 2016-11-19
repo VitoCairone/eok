@@ -1,13 +1,5 @@
 <p id="notice"><%= notice %></p>
 
-<h2>
-  Everyone Knows |
-  Voiced |
-  <span id="stars-header">
-    <%= render partial: 'questions/stars_header' %>
-  </span>
-</h2>
-
 <div id="voiced-questions-top" class="questions-top">
   <% if not (@questions.nil? or @questions.empty?) %>
     <%= render 'questions/all_questions' %>
@@ -16,4 +8,6 @@
   <% end %>
 </div>
 
-<%= render 'questions/bottom_nav' %>
+<nav class="navbar navbar-default navbar-static-bottom" role="navigation">
+  <%= will_paginate @questions %>
+</nav>

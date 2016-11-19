@@ -5,6 +5,7 @@ class QuestionsController < ApplicationController
 
   # GET /questions
   def index
+    @this_page = 'Home'
     # puts "in index method"
     fetch_page = params[:page] or 1
     @questions = Question.get_unseen_for(current_user_auth).paginate(page: fetch_page, per_page: 5)
@@ -17,6 +18,7 @@ class QuestionsController < ApplicationController
 
   # GET /questions/voiced
   def voiced
+    @this_page = 'Voiced'
     #@questions = Question.get_voiced_for(current_user_auth)
     fetch_page = params[:page] or 1
     @questions = Question.get_voiced_for(current_user_auth).paginate(page: fetch_page, per_page: 5)
@@ -33,6 +35,7 @@ class QuestionsController < ApplicationController
 
   # GET /questions/passed
   def passed
+    @this_page = 'Passed'
     fetch_page = params[:page] or 1
     @questions = Question.get_passed_for(current_user_auth).paginate(page: fetch_page, per_page: 5)
     @my_voices = Voice.where(user_auth_id: current_user_auth.id)
@@ -50,6 +53,7 @@ class QuestionsController < ApplicationController
 
   # GET /questions/new
   def new
+    @this_page = 'Write'
     # Create a new blank question so we can reuse
     # view logic for 'new' and 'edit'. This doesn't
     # hit the database until 'create'.
@@ -140,13 +144,11 @@ class QuestionsController < ApplicationController
     end
 
     def store_return_to
-      puts "testing s_r_t"
       session[:return_to] = request.url
     end
 
     # Can't interact without a login
     def require_logged_in
-      puts "testing r_l_i"
-      redirect_to '/auth/facebook' unless current_user_auth
+      redirect_to login_path unless current_user_auth
     end
 end

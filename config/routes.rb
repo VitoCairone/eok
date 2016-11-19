@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root 'welcome#index'
+  root 'questions#index'
 
   resources :thoughts
 
@@ -12,7 +12,11 @@ Rails.application.routes.draw do
 
   resources :voices, except: [:new, :edit, :update]
 
+  get '/login', to: 'welcome#login'
+
   get '/auth/:provider/callback', to: 'sessions#create'
+
+  get '/welcome', to: 'welcome#index'
 
   delete '/logout', to: 'sessions#destroy'
 

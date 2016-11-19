@@ -10,6 +10,57 @@
   </head>
 
   <body>
+
+    <!-- TODO: the way this navbar collapses at low width is very bad and ugly.
+      Prevent collapsing, and later customize to collapse correctly. -->
+
+    <nav class="navbar navbar-default navbar-static-top" role="navigation">
+      <div class="navbar-header">
+        <span class="navbar-brand">Everyone Knows</span>
+      </div>
+
+      <!--Left Align-->
+      <div>
+        <ul class="nav navbar-nav navbar-left">
+          <li class="<%= 'active' if @this_page == 'Write' %>">
+            <a href = "<%= new_question_path %>">Write</a>
+          </li>
+          <li class="<%= 'active' if @this_page == 'Home' %>">
+            <a href="<%= questions_path %>">Home</a>
+          </li>
+          <li class="<%= 'active' if @this_page == 'Voiced' %>">
+            <a href = "<%= voiced_questions_path %>">Voiced</a>
+          </li>
+          <li class="<%= 'active' if @this_page == 'Passed' %>">
+            <a href = "<%= passed_questions_path %>">Passed</a>
+          </li>
+        </ul>
+      </div>
+
+      <!--Right Align-->
+      <div>
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <div class="navbar-text">
+              <% if @current_user_auth %>
+                Welcome, <%= @current_user_auth.name %>
+              <% else %>
+                <%= link_to 'Login', '/auth/facebook' %>
+              <% end %>
+            </div>
+          </li>
+
+          <!-- ghetto way to push text away from the very right edge
+               without modifying BS CSS -->
+          <li>
+            &nbsp;&nbsp;&nbsp;
+          </li>
+        </ul>
+      </div>
+
+    </nav>
+
     <%= yield %>
+
   </body>
 </html>

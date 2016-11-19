@@ -7,7 +7,21 @@ class SessionsController < ApplicationController
     rescue
       flash[:warning] = 'There was an error trying to authenticate you.'
     end
-    redirect_back
+
+    # puts "@@@@@"
+    puts @user_auth.newbie
+    puts session[:return_to]
+    if @user_auth.newbie
+      @user_auth.newbie = false
+      @user_auth.save
+      redirect_to welcome_path
+    else
+      if session[:return_to]
+        redirect_back
+      else
+        redirect_to questions_path
+      end
+    end
   end
 
   def destroy

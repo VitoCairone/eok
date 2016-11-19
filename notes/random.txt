@@ -18,3 +18,16 @@ never unexpectedly cause a new fetch.
 
 Clicking X also causes the window to expand or collapse;
 this should be prevented
+
+
+*****
+
+* At 5 stars, animate and award +10
+* Show 2c to questions w/ CSS animation
+* Move accordion expand button to left
+* Provide button to donate directly
+
+
+* splash page with only logo/login on background
+* show User's card
+* one-page text; logo over short paragraph on simple background, no bullets!
