@@ -6,9 +6,11 @@
 # on higher elements outside the rewritten scope, might be a
 # better solution
 attachButtonPaneClickHandlers = ->
-  console.log("attaching")
+  aDate = new Date(); 
+  # console.log("attaching at " + aDate.getMinutes() + ":" + aDate.getSeconds())
   $('.pass-button').click (evt) ->
-    console.log("!!!!")
+    date = new Date();
+    # console.log("!!!! " + date.getMinutes() + ":" + date.getSeconds())
     evt.stopPropagation()
     return true # keep the direct behavior
 
