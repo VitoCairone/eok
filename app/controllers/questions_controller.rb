@@ -70,6 +70,18 @@ class QuestionsController < ApplicationController
   # POST /questions.json
   def create
     these_params = question_params
+
+    if these_params['text'].blank?
+      @question = Question.new(these_params)
+      puts "!!!!"
+      puts @question.choices.size
+      (7 - @question.choices.size).times { @question.choices.build }
+      flash[:notice] = 'Text cannot be blank'
+      render :new
+      # redirect_to new_question_path, notice: 'Text cannot be blank'
+      return
+    end
+
     choices_attribs = these_params['choices_attributes']
 
     # drop all blank choices
