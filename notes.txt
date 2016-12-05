@@ -3,3 +3,22 @@ rails g scaffold question text:text user_auth:references anonymous:boolean cents
 rails g scaffold choice text:text question:references ordinality:integer voice_count:integer is_pass:boolean
 
 rails g scaffold voice user_auth:references question:references choice:references
+
+-----
+
+the index page needs to know
+  - each question and its choices
+
+the index page also needs to know, and be able to respond to changes client-side (with JavaScript), to
+  - the users' current voice for each question
+
+to do this:
+
+  Method 1: 
+
+  request Question IDs and associated Choice IDs for the view first
+
+  Using IN clause on Question IDs, request users' Voices 
+
+  before sending data to front-end, package in a hash keyed on Question IDs for easy access of data under each question
+  

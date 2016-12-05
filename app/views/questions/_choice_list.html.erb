@@ -1,4 +1,12 @@
-<% i_voiced = (my_choice_ids.length > 0) && (my_choice_ids[0] != question.pass_choice_id) %>
+<%
+  user_choice_type = nil
+  if my_choice_ids.length > 0
+    user_choice_type = :voiced
+    if my_choice_ids[0] == question.pass_choice_id
+      user_choice_type = :passed
+    end
+  end
+%>
 
 <% question_choices = question.choices %>
 
@@ -19,10 +27,10 @@
       <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
       <%= hidden_field_tag "voice[choice_id]", choice.id %>
       <%= hidden_field_tag "panel_num_word", num_word %>
-      <input type="submit" class="choice-button" value="<%= choice.text %>" />
+      <input type="submit" class="choice-button" <%= 'disabled' if user_choice_type == :passed %> value="<%= choice.text %>" />
 
       <!-- perhaps use a div with span-ish CSS instead -->
-      <div class="<%= 'hidden' unless i_voiced %> voice-count-pane">
+      <div class="<%= 'hidden' unless user_choice_type == :voiced %> voice-count-pane">
         <!-- NOT_A_FEATURE: this triggers a COUNT query per choice,
           which is 15-35 querys per page. 
           TODO: make sure the backend is preloading

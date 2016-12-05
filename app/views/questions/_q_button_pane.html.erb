@@ -1,18 +1,23 @@
+<%
+  user_choice_type = nil
+  if my_choice_ids.length > 0
+    user_choice_type = :voiced
+    if my_choice_ids[0] == question.pass_choice_id
+      user_choice_type = :passed
+    end
+  end
+
+  def disabled_if_voiced(choice_type)
+    return 'disabled' if choice_type == :voiced
+  end
+%>
+
 <!-- todo: remove pass-container class -->
 <div id="buttons<%= num_word %>" class="pass-container button-pane" style="float: right; clear: both;">
 
-  <!-- play_color is related to play chevron which is not currently used -->
-  <% play_color = 'black' %>
   <% pass_color = 'black' %>
-  <% if my_choice_ids.length > 0 %>
-    <% if my_choice_ids[0] == question.pass_choice_id %>
-      <% play_color = 'grey' %>
-      <% pass_color = 'red' %>
-    <% else %>
-      <% play_color = 'green' %>
-      <% pass_color = 'grey' %>
-    <% end %>
-  <% end %>
+  <% pass_color = 'grey' if user_choice_type == :voiced %>
+  <% pass_color = 'red' if user_choice_type == :passed %>
 
   <%= question.cents or 0 %>&cent;
 
@@ -24,6 +29,6 @@
     <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
     <%= hidden_field_tag "voice[choice_id]", question.pass_choice_id %>
     <%= hidden_field_tag "panel_num_word", num_word %>
-    <input class="pass-button" type="submit" value="X" style="color: <%= pass_color %>;"/>
+    <input class="pass-button" type="submit" value="X" style="color: <%= pass_color %>;" <%= disabled_if_voiced user_choice_type %> />
   </form>
 </div>
