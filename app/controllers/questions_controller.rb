@@ -70,16 +70,12 @@ class QuestionsController < ApplicationController
   # POST /questions.json
   def create
     these_params = question_params
+    error_encountered = false
 
     if these_params['text'].blank?
-      @question = Question.new(these_params)
-      puts "!!!!"
-      puts @question.choices.size
-      (7 - @question.choices.size).times { @question.choices.build }
-      flash[:notice] = 'Text cannot be blank'
-      render :new
-      # redirect_to new_question_path, notice: 'Text cannot be blank'
-      return
+      flash[:notice] ||= ''
+      flash[:notice] += ' Question text cannot be blank.'
+      error_encountered = true
     end
 
     choices_attribs = these_params['choices_attributes']
@@ -96,11 +92,27 @@ class QuestionsController < ApplicationController
       idx += 1;
     end
 
+    # reject questions with less than 3 non-blank answers
+    if idx < 4
+      flash[:notice] ||= ''
+      flash[:notice] += ' At least 3 answers are required.'
+      error_encountered = true
+    end
+
+    if error_encountered
+      @question = Question.new(these_params)
+      (7 - @question.choices.size).times { @question.choices.build }
+      render :new
+      return
+    end
+
     # this is where :acceps_nested_attributes_for
     # creates all the associated choices also
     @question = Question.new(these_params)
     @question.user_auth = current_user_auth
     @question.cents = 5
+    current_user_auth.cents -= 5
+    current_user_auth.save
 
     respond_to do |format|
       if @question.save
