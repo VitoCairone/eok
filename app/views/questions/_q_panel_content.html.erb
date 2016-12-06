@@ -1,6 +1,14 @@
+<%
+  collapse_class = 'collapse'
+  collapse_class = 'in' if num_word == 'Zero'
+  data_target = "#collapse#{num_word}"
+  data_target = '#devnull' if num_word == 'Zero'
+%>
+
+
 <div class="panel-heading"
  onclick="location.href='#';" style="cursor: pointer;"
- data-toggle="collapse" data-target="#collapse<%= num_word %>" 
+ data-toggle="collapse" data-target="<%= data_target %>" 
  data-remote="true" data-parent="#accordion">
   <h4 class="panel-title">
   
@@ -15,7 +23,7 @@
 
   </h4>
 </div>
-<div id="collapse<%= num_word %>" class="panel-collapse collapse">
+<div id="collapse<%= num_word %>" class="panel-collapse <%= collapse_class %>">
 
   <%= render partial: "questions/choice_list", locals: {question: question, my_choice_ids: my_choice_ids, num_word: num_word} %>
     
