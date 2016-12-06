@@ -1,30 +1,15 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Text:</strong>
-  <%= @question.text %>
-</p>
+<% all_my_choice_ids = @my_voices.map { |voice| voice.choice_id } %>
+<% question_choice_ids = @question.choices.map { |x| x.id } %>
+<% my_choice_ids = all_my_choice_ids & question_choice_ids %>
+<% num_word = 'Zero' %>
 
-<p>
-  <strong>Author:</strong>
-  <% if @question.anonymous %>
-    <%= 'Anonymous' %>
-    <%= '(you!)' if current_user_auth and (@question.user_auth.id == current_user_auth.id) %>
-  <% else %>
-    <%= @question.user_auth.name %>
-  <% end %>
-</p>
+<div class="panel panel-default" id="panel<%= num_word %>">
 
-<p>
-  <strong>Cents:</strong>
-  <%= @question.cents %>
-</p>
+  <%= render partial: "questions/q_panel_content", locals: {question: @question, my_choice_ids: my_choice_ids, num_word: num_word} %>
 
-<p>
-  <strong>Randomize:</strong>
-  <%= @question.randomize %>
-</p>
-
+</div>
 
 <%= link_to 'Edit', edit_question_path(@question) %> |
 <%= link_to 'Back', questions_path %>
