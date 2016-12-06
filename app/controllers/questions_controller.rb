@@ -100,7 +100,6 @@ class QuestionsController < ApplicationController
 
     # reject questions with less than 3 non-blank answers
     if idx < 4
-      flash[:notice] ||= ''
       flash[:notice] += ' At least 3 answers are required.'
       error_encountered = true
     end

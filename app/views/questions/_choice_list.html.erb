@@ -8,7 +8,7 @@
   end
 %>
 
-<% question_choices = question.choices %>
+<% question_choices = question.choices.order(:ordinality) %>
 
 <!-- TODO: find a way to reshuffle only on refresh and
   possibly collapse/expand, but NOT after voicing, as this
