@@ -78,10 +78,17 @@ class VoicesController < ApplicationController
       @voice.save # need to handle errors here better
 
       unless @choice_is_pass
+        old_cents = @question.cents
         @question.cents += 2
         current_user_auth.cents -= 2
         @question.save
         current_user_auth.save
+        if @question.cents / 100 > old_cents / 100
+          # TODO: decide a good way to notify awarded authors of their
+          # cents gained
+          question.user_auth.cents += 10;
+          question.user_auth.save
+        end
       end
 
     end
