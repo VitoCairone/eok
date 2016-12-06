@@ -50,6 +50,7 @@ class QuestionsController < ApplicationController
 
   # GET /questions/1
   def show
+    @my_voices = Voice.where(user_auth_id: current_user_auth.id)
   end
 
   # GET /questions/new
@@ -70,10 +71,15 @@ class QuestionsController < ApplicationController
   # POST /questions.json
   def create
     these_params = question_params
+    flash[:notice] = ''
     error_encountered = false
 
+    if current_user_auth.cents < 5
+      flash[:notice] += ' 5 ¢ is required to create a question.'
+      error_encountered = true 
+    end
+
     if these_params['text'].blank?
-      flash[:notice] ||= ''
       flash[:notice] += ' Question text cannot be blank.'
       error_encountered = true
     end
@@ -110,9 +116,6 @@ class QuestionsController < ApplicationController
     # creates all the associated choices also
     @question = Question.new(these_params)
     @question.user_auth = current_user_auth
-    @question.cents = 5
-    current_user_auth.cents -= 5
-    current_user_auth.save
 
     respond_to do |format|
       if @question.save
@@ -121,6 +124,9 @@ class QuestionsController < ApplicationController
         # prefer to create this along with other choices if possible,
         # without opening integrity vulnerabilities to bad requests.
         @question.choices.build(text: 'pass', ordinality: 0, is_pass: true)
+        @question.cents = 5
+        current_user_auth.cents -= 5
+        current_user_auth.save
         @question.save
 
         format.html { redirect_to @question, notice: 'Question was successfully created.' }
