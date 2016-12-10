@@ -1,3 +1,13 @@
+# Controller for Questions routes.
+# Questions has standard CRUD methods
+# as well as /voiced and /passed variants on /index,
+# which are divided up by whether the user has responded and how.
+# /index shows questions the user hasn't responded
+# /voiced shows questions the user created a (non-pass) voice
+# /passed shows questions the user passed on
+# may consider hiding or decreasing in prominence /passed view
+#
+# TODO: implemented Edit interface
 class QuestionsController < ApplicationController
   before_filter :store_return_to
   before_filter :require_logged_in
@@ -6,9 +16,10 @@ class QuestionsController < ApplicationController
   # GET /questions
   def index
     @this_page = 'Home'
-    fetch_page = params[:page] or 1
-    @questions = Question.get_unseen_for(current_user_auth).paginate(page: fetch_page, per_page: 5)
-    
+    fetch_page = params[:page] || 1
+    @questions = Question.get_unseen_for(current_user_auth)
+                         .paginate(page: fetch_page, per_page: 5)
+
     @my_voices = Voice.where(user_auth_id: current_user_auth.id)
 
     @n_unresponded = @questions.count
@@ -19,13 +30,14 @@ class QuestionsController < ApplicationController
   # GET /questions/voiced
   def voiced
     @this_page = 'Voiced'
-    fetch_page = params[:page] or 1
-    @questions = Question.get_voiced_for(current_user_auth).paginate(page: fetch_page, per_page: 5)
+    fetch_page = params[:page] || 1
+    @questions = Question.get_voiced_for(current_user_auth)
+                         .paginate(page: fetch_page, per_page: 5)
 
     # From this join we already know all the user's voices,
     # but we awkwardly compute them again many times.
     # TODO: refactor this to use existing data better
-    
+
     @my_voices = Voice.where(user_auth_id: current_user_auth.id)
     # @my_voices = Voice.joins(:choices)
     #   .where(user_auth_id: current_user_auth.id)
@@ -37,8 +49,9 @@ class QuestionsController < ApplicationController
   # GET /questions/passed
   def passed
     @this_page = 'Passed'
-    fetch_page = params[:page] or 1
-    @questions = Question.get_passed_for(current_user_auth).paginate(page: fetch_page, per_page: 5)
+    fetch_page = params[:page] || 1
+    @questions = Question.get_passed_for(current_user_auth)
+                         .paginate(page: fetch_page, per_page: 5)
     @my_voices = Voice.where(user_auth_id: current_user_auth.id)
     # @my_voices = Voice.joins(:choices).where(
     #   user_auth_id: current_user_auth.id,
@@ -76,7 +89,7 @@ class QuestionsController < ApplicationController
 
     if current_user_auth.cents < 5
       flash[:notice] += ' 5 ¢ is required to create a question.'
-      error_encountered = true 
+      error_encountered = true
     end
 
     if these_params['text'].blank?
@@ -87,15 +100,15 @@ class QuestionsController < ApplicationController
     choices_attribs = these_params['choices_attributes']
 
     # drop all blank choices
-    choices_attribs.keep_if { |k, v| !v['text'].blank? }
+    choices_attribs.keep_if { |_k, v| !v['text'].blank? }
 
     # assign ordinality, ensuring a consecutively numbered
     # set of non-blank choices are always sent to the database.
-    idx = 1;
-    choices_attribs.each do |k, v|
-      v['ordinality'] = idx;
-      v['is_pass'] = false;
-      idx += 1;
+    idx = 1
+    choices_attribs.each do |_k, v|
+      v['ordinality'] = idx
+      v['is_pass'] = false
+      idx += 1
     end
 
     # reject questions with less than 3 non-blank answers
@@ -128,7 +141,8 @@ class QuestionsController < ApplicationController
         current_user_auth.save
         @question.save
 
-        format.html { redirect_to @question, notice: 'Question was successfully created.' }
+        created_notice = 'Question was successfully created.'
+        format.html { redirect_to @question, notice: created_notice }
         format.json { render :show, status: :created, location: @question }
       else
         format.html { render :new }
@@ -142,7 +156,8 @@ class QuestionsController < ApplicationController
   def update
     respond_to do |format|
       if @question.update(question_params)
-        format.html { redirect_to @question, notice: 'Question was successfully updated.' }
+        updated_notice = 'Question was successfully updated.'
+        format.html { redirect_to @question, notice: updated_notice }
         format.json { render :show, status: :ok, location: @question }
       else
         format.html { render :edit }
@@ -155,30 +170,35 @@ class QuestionsController < ApplicationController
   # DELETE /questions/1.json
   def destroy
     @question.destroy
+    destroyed_notice = 'Question was successfully destroyed.'
     respond_to do |format|
-      format.html { redirect_to questions_url, notice: 'Question was successfully destroyed.' }
+      format.html { redirect_to questions_url, notice: destroyed_notice }
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_question
-      @question = Question.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def question_params
-      safe_params = params.require(:question).permit(:text, :anonymous, :randomize, choices_attributes: [:id, :text])
-      safe_params
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_question
+    @question = Question.find(params[:id])
+  end
 
-    def store_return_to
-      session[:return_to] = request.url
-    end
+  # Never trust parameters from the scary internet,
+  # only allow the white list through.
+  def question_params
+    safe_params = params.require(:question).permit(
+      :text, :anonymous, :randomize, choices_attributes: [:id, :text]
+    )
+    safe_params
+  end
 
-    # Can't interact without a login
-    def require_logged_in
-      redirect_to login_path unless current_user_auth
-    end
+  def store_return_to
+    session[:return_to] = request.url
+  end
+
+  # Can't interact without a login
+  def require_logged_in
+    redirect_to login_path unless current_user_auth
+  end
 end
