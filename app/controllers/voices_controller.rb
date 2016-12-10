@@ -22,13 +22,13 @@ class VoicesController < ApplicationController
     choice = Choice.find(choice_id)
     return if choice.nil?
     question_id = choice.question_id
-    
-    @choice_is_pass = (choice.ordinality == 0)
+
+    @choice_is_pass = choice.ordinality.zero?
 
     return if current_user_auth.nil?
 
     # end without action if not a pass and can't donate 2 cents
-    if (current_user_auth.cents < 2 and !@choice_is_pass)
+    if current_user_auth.cents < 2 && !@choice_is_pass
       flash[:notice] = ' 2 ¢ is required to create a voice.'
       error_encountered = true
     end
@@ -40,13 +40,14 @@ class VoicesController < ApplicationController
       user_auth_id = current_user_auth.id
       # end without action if the choice already exists
       if Voice.exists?(user_auth_id: user_auth_id, choice_id: choice_id)
-        head :ok, content_type: "text/html"
+        head :ok, content_type: 'text/html'
         return
       end
 
       # Before creating a voice, delete any existing voice(s) the user
       # might have for this question.
-      old_voice_count = Voice.where(question_id: question_id, user_auth_id: user_auth_id).delete_all
+      old_voice_count = Voice.where(question_id: question_id,
+                                    user_auth_id: user_auth_id).delete_all
 
       # award a star if the new choice is the most popular, before
       # creating it.
@@ -55,21 +56,19 @@ class VoicesController < ApplicationController
       # COUNT(voices) FROM choices JOIN voices ON
       # voices.choice_id = choices.id GROUP BY choice_id
       # -- if DB becomes large, will need to use caching instead
-      max_voices = @question.choices.map{ |c| c.voices_count}.max
+      max_voices = @question.choices.map(&:voices_count).max
 
-      if old_voice_count == 0 # alter stars only on first voicing
-        if ((choice.voices_count + 1) >= max_voices)
+      if old_voice_count.zero? # alter stars only on first voicing
+        if (choice.voices_count + 1) >= max_voices
           current_user_auth.star_count += 1
           current_user_auth.save
-        else
-          if current_user_auth.star_count != 0
-            current_user_auth.star_count = 0
-            current_user_auth.save
-          end
+        elsif current_user_auth.star_count.nonzero?
+          current_user_auth.star_count = 0
+          current_user_auth.save
         end
       end
-      
-      these_params = voice_params;
+
+      these_params = voice_params
       these_params['question_id'] = question_id
       these_params['user_auth_id'] = user_auth_id
       these_params['is_pass'] = @choice_is_pass
@@ -86,7 +85,7 @@ class VoicesController < ApplicationController
         if @question.cents / 100 > old_cents / 100
           # TODO: decide a good way to notify awarded authors of their
           # cents gained
-          question.user_auth.cents += 10;
+          question.user_auth.cents += 10
           question.user_auth.save
         end
       end
@@ -105,13 +104,15 @@ class VoicesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_voice
-      @voice = Voice.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def voice_params
-      params.require(:voice).permit(:choice_id)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_voice
+    @voice = Voice.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the
+  # white list through.
+  def voice_params
+    params.require(:voice).permit(:choice_id)
+  end
 end
