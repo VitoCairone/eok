@@ -4,7 +4,7 @@
 class SessionsController < ApplicationController
   def create
     create_or_find_user_by_omniauth
-    
+
     if @user_auth.newbie
       @user_auth.newbie = false
       @user_auth.save

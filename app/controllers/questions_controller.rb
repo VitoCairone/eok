@@ -91,21 +91,7 @@ class QuestionsController < ApplicationController
 
     @question = make_question these_params
 
-    respond_to do |format|
-      if @question.save
-        # here we somewhat awkwardly always save twice, but it seems only
-        # right that cents are not transacted until the question is created
-        # and saved successfully
-        donate_user_cents_to_question 5
-
-        created_notice = 'Question was successfully created.'
-        format.html { redirect_to @question, notice: created_notice }
-        format.json { render :show, status: :created, location: @question }
-      else
-        format.html { render :new }
-        format.json { render json: @question.errors, status: :unprocessable_entity }
-      end
-    end
+    create_response_to_browser
   end
 
   # PATCH/PUT /questions/1
@@ -118,7 +104,8 @@ class QuestionsController < ApplicationController
         format.json { render :show, status: :ok, location: @question }
       else
         format.html { render :edit }
-        format.json { render json: @question.errors, status: :unprocessable_entity }
+        # 422 = unproccessable_entity
+        format.json { render json: @question.errors, status: 422 }
       end
     end
   end
@@ -136,12 +123,46 @@ class QuestionsController < ApplicationController
 
   private
 
+  def create_response_to_browser
+    respond_to do |format|
+      if save_and_donate_to_question
+        created_notice = 'Question was successfully created.'
+        format.html { redirect_to @question, notice: created_notice }
+        format.json { render :show, status: :created, location: @question }
+      else
+        format.html { render :new }
+        # 422 = unproccessable_entity
+        format.json { render json: @question.errors, status: 422 }
+      end
+    end
+  end
+
   def donate_user_cents_to_question(n)
     current_user_auth.cents -= n
     current_user_auth.save
 
     @question.cents += n
     @question.save
+  end
+
+  def encounter_param_errors(params)
+    flash[:notice] = ''
+    error_encountered = false
+
+    notice_blank = ' Question text cannot be blank.'
+    error_encountered |= notice_if params['text'].blank?, notice_blank
+
+    # drop all blank choices and
+    # assign ordinality, ensuring a consecutively numbered
+    # set of non-blank choices are always sent to the database.
+    scrub_choices_attributes params['choices_attributes']
+
+    # reject questions with less than 3 non-blank answers
+    choice_count = params['choices_attributes'].count
+    notice_few_choices = ' At least 3 answers are required.'
+    error_encountered |= notice_if (choice_count < 3), notice_few_choices
+
+    error_encountered
   end
 
   def make_question(params)
@@ -160,14 +181,6 @@ class QuestionsController < ApplicationController
     question
   end
 
-  def notice_if(condition, notice)
-    if condition
-      flash[:notice] += notice
-      return true
-    end
-    false
-  end
-
   # Never trust parameters from the scary internet,
   # only allow the white list through.
   def question_params
@@ -179,29 +192,8 @@ class QuestionsController < ApplicationController
     safe_params
   end
 
-  # Can't interact without a login
-  def require_logged_in
-    redirect_to login_path unless current_user_auth
-  end
-
   def require_valid_params(params)
-    flash[:notice] = ''
-    error_encountered = false
-
-    notice_blank = ' Question text cannot be blank.'
-    error_encountered |= notice_if params['text'].blank?, notice_blank
-
-    # drop all blank choices and
-    # assign ordinality, ensuring a consecutively numbered
-    # set of non-blank choices are always sent to the database.
-    scrub_choices_attributes params['choices_attributes']
-
-    # reject questions with less than 3 non-blank answers
-    choice_count = params['choices_attributes'].count
-    notice_few_choices = ' At least 3 answers are required.'
-    error_encountered |= notice_if (choice_count < 3), notice_few_choices
-
-    if error_encountered
+    if encounter_param_errors(params)
       @question = Question.new(params)
       # create blank choices enough to make 7 so the re-rendered
       # new view will properly display
@@ -211,6 +203,16 @@ class QuestionsController < ApplicationController
     end
 
     true
+  end
+
+  def save_and_donate_to_question
+    if @question.save
+      # here we somewhat awkwardly always save twice, but it seems only
+      # right that cents are not transacted until the question is first
+      # created and saved successfully
+      return donate_user_cents_to_question 5
+    end
+    false
   end
 
   def scrub_choices_attributes(choices_attribs)
