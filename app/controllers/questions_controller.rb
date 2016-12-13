@@ -84,62 +84,19 @@ class QuestionsController < ApplicationController
   # POST /questions.json
   def create
     these_params = question_params
-    flash[:notice] = ''
-    error_encountered = false
 
-    if current_user_auth.cents < 5
-      flash[:notice] += ' 5 ¢ is required to create a question.'
-      error_encountered = true
-    end
+    # check params, updating notice with all errors found,
+    # returning true (thus preventing exit from this fn) only on success
+    return unless require_valid_params these_params
 
-    if these_params['text'].blank?
-      flash[:notice] += ' Question text cannot be blank.'
-      error_encountered = true
-    end
-
-    choices_attribs = these_params['choices_attributes']
-
-    # drop all blank choices
-    choices_attribs.keep_if { |_k, v| !v['text'].blank? }
-
-    # assign ordinality, ensuring a consecutively numbered
-    # set of non-blank choices are always sent to the database.
-    idx = 1
-    choices_attribs.each do |_k, v|
-      v['ordinality'] = idx
-      v['is_pass'] = false
-      idx += 1
-    end
-
-    # reject questions with less than 3 non-blank answers
-    if idx < 4
-      flash[:notice] += ' At least 3 answers are required.'
-      error_encountered = true
-    end
-
-    if error_encountered
-      @question = Question.new(these_params)
-      (7 - @question.choices.size).times { @question.choices.build }
-      render :new
-      return
-    end
-
-    # this is where :acceps_nested_attributes_for
-    # creates all the associated choices also
-    @question = Question.new(these_params)
-    @question.user_auth = current_user_auth
+    @question = make_question these_params
 
     respond_to do |format|
       if @question.save
-
-        # with the question saved, add one more choice which is the pass.
-        # prefer to create this along with other choices if possible,
-        # without opening integrity vulnerabilities to bad requests.
-        @question.choices.build(text: 'pass', ordinality: 0, is_pass: true)
-        @question.cents = 5
-        current_user_auth.cents -= 5
-        current_user_auth.save
-        @question.save
+        # here we somewhat awkwardly always save twice, but it seems only
+        # right that cents are not transacted until the question is created
+        # and saved successfully
+        donate_user_cents_to_question 5
 
         created_notice = 'Question was successfully created.'
         format.html { redirect_to @question, notice: created_notice }
@@ -179,26 +136,98 @@ class QuestionsController < ApplicationController
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
-  def set_question
-    @question = Question.find(params[:id])
+  def donate_user_cents_to_question(n)
+    current_user_auth.cents -= n
+    current_user_auth.save
+
+    @question.cents += n
+    @question.save
+  end
+
+  def make_question(params)
+    # this is where :acceps_nested_attributes_for
+    # creates all the associated choices also
+    question = Question.new(params)
+
+    # ignore any user specified by the request and always use the
+    # session-based notion of the current user
+    question.user_auth = current_user_auth
+
+    # Add one more choice which is the pass.
+    # prefer to create this along with other choices if possible.
+    question.choices.build(text: 'pass', ordinality: 0, is_pass: true)
+
+    question
+  end
+
+  def notice_if(condition, notice)
+    if condition
+      flash[:notice] += notice
+      return true
+    end
+    false
   end
 
   # Never trust parameters from the scary internet,
   # only allow the white list through.
   def question_params
+    # TODO: check how many times this is called; some of this syntax
+    # here or with these_params = question_params may be unnecessary
     safe_params = params.require(:question).permit(
       :text, :anonymous, :randomize, choices_attributes: [:id, :text]
     )
     safe_params
   end
 
-  def store_return_to
-    session[:return_to] = request.url
-  end
-
   # Can't interact without a login
   def require_logged_in
     redirect_to login_path unless current_user_auth
+  end
+
+  def require_valid_params(params)
+    flash[:notice] = ''
+    error_encountered = false
+
+    notice_blank = ' Question text cannot be blank.'
+    error_encountered |= notice_if params['text'].blank?, notice_blank
+
+    # drop all blank choices and
+    # assign ordinality, ensuring a consecutively numbered
+    # set of non-blank choices are always sent to the database.
+    scrub_choices_attributes params['choices_attributes']
+
+    # reject questions with less than 3 non-blank answers
+    choice_count = params['choices_attributes'].count
+    notice_few_choices = ' At least 3 answers are required.'
+    error_encountered |= notice_if (choice_count < 3), notice_few_choices
+
+    if error_encountered
+      @question = Question.new(params)
+      # create blank choices enough to make 7 so the re-rendered
+      # new view will properly display
+      (7 - @question.choices.size).times { @question.choices.build }
+      render :new
+      return false
+    end
+
+    true
+  end
+
+  def scrub_choices_attributes(choices_attribs)
+    choices_attribs.keep_if { |_k, v| !v['text'].blank? }
+    idx = 1
+    choices_attribs.each do |_k, v|
+      v['ordinality'] = idx
+      v['is_pass'] = false
+      idx += 1
+    end
+  end
+
+  def set_question
+    @question = Question.find(params[:id])
+  end
+
+  def store_return_to
+    session[:return_to] = request.url
   end
 end
