@@ -1,9 +1,13 @@
+# A user_auth is specifically the authorization which uniquely identifies a
+# user, and may at some point be made distinct from an actual user. For now
+# however the user_auth also serves the purpose of being a normal user.
 class UserAuth < ApplicationRecord
   has_one :thought
 
   class << self
     def from_omniauth(auth_hash)
-      user_auth = find_or_create_by(uid: auth_hash['uid'], provider: auth_hash['provider'])
+      user_auth = find_or_create_by(uid: auth_hash['uid'],
+                                    provider: auth_hash['provider'])
       user_auth.name = auth_hash['info']['name']
       user_auth.location = auth_hash['info']['location']
       user_auth.image_url = auth_hash['info']['image']

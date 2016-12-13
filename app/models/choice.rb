@@ -1,3 +1,5 @@
+# The Choice model just holds the text of a choice,
+# and a link to its question
 class Choice < ApplicationRecord
   belongs_to :question
 
